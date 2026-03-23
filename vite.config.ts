@@ -11,6 +11,6 @@ export default defineConfig({
       "@assets": path.resolve(__dirname, "./public"),
     },
   },
-  // Configuração para GitHub Pages
-  base: process.env.VITE_BASE_PATH || "/quizPage_elev/",
+  // Configuração para GitHub Pages com custom domain
+  base: process.env.VITE_BASE_PATH || "/",
 });
