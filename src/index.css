@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 24% 6%; /* #0B0B12 */
+    --foreground: 0 0% 100%; /* branco puro */
+
+    --card: 240 21% 12%; /* #181825 */
+    --card-foreground: 0 0% 100%;
+
+    --popover: 240 21% 12%;
+    --popover-foreground: 0 0% 100%;
+
+    /* Roxo vibrante como cor principal */
+    --primary: 256 77% 62%; /* #7B52E8 */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 17% 15%;
+    --secondary-foreground: 0 0% 90%;
+
+    --muted: 240 17% 15%;
+    --muted-foreground: 240 10% 58%; /* cinza médio para textos secundários */
+
+    --accent: 240 17% 15%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 88% 59%; /* #F23A3A */
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 144 69% 45%; /* #24C264 */
+    --success-foreground: 0 0% 100%;
+
+    --border: 240 14% 18%;
+    --input: 240 17% 15%;
+    --ring: 256 77% 62%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 240 24% 6%;
+    --foreground: 0 0% 100%;
+
+    --card: 240 21% 12%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 240 21% 12%;
+    --popover-foreground: 0 0% 100%;
+
+    --primary: 256 77% 62%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 17% 15%;
+    --secondary-foreground: 0 0% 90%;
+
+    --muted: 240 17% 15%;
+    --muted-foreground: 240 10% 58%;
+
+    --accent: 240 17% 15%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 88% 59%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 144 69% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --border: 240 14% 18%;
+    --input: 240 17% 15%;
+    --ring: 256 77% 62%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Animação de shimmer para barra de progresso */
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 1.5s infinite;
+  }
+
+  /* Animação de partículas flutuantes */
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0) translateX(0);
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-100vh) translateX(20px);
+      opacity: 0;
+    }
+  }
+
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+}

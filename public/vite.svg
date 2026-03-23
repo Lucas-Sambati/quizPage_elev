@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+  <!-- Background -->
+  <rect width="300" height="300" fill="#16a34a"/>
+  
+  <!-- Weight Icon -->
+  <g transform="translate(150, 150)">
+    <!-- Bar -->
+    <rect x="-80" y="-8" width="160" height="16" fill="white" rx="4"/>
+    
+    <!-- Left weight -->
+    <rect x="-95" y="-35" width="30" height="70" fill="white" rx="4"/>
+    <rect x="-90" y="-30" width="20" height="60" fill="#dcfce7"/>
+    
+    <!-- Right weight -->
+    <rect x="65" y="-35" width="30" height="70" fill="white" rx="4"/>
+    <rect x="70" y="-30" width="20" height="60" fill="#dcfce7"/>
+  </g>
+</svg>
