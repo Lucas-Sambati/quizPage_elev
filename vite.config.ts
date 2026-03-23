@@ -12,6 +12,5 @@ export default defineConfig({
     },
   },
   // Configuração para GitHub Pages
-  // Altere 'hipertrofia' para o nome do seu repositório
-  base: process.env.VITE_BASE_PATH || '/hipertrofia/',
+  base: process.env.VITE_BASE_PATH || '/quizPage_elev/',
 })
