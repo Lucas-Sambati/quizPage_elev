@@ -1,0 +1,381 @@
+* Quantas vezes voce vai à academia?
+
+    if 2 ou menos:
+
+        * Por qual motivo voce não consegue manter uma frequencia maior?
+
+            if falta de tempo:
+
+                * Qual horário de treino se encaixaria melhor na sua rotina?
+
+                    - Manha
+                    
+                    - Tarde
+
+                    - Noite
+                
+                * Quanto tempo você conseguiria ficar na academia?
+
+                    if Menos de uma hora:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL OCUPADO' (id=1)
+
+                    if Até uma hora e meia:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+
+                            PAGINA 'PERFIL DESALINHADO' (id=2)
+
+                    if Mais de uma hora e meia:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+
+                            PAGINA 'PERFIL DESALINHADO' (id=3)
+
+            if pouca motivação:
+                                     
+                * O que mais te motivaria a continuar treinando?
+
+                    if competição:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL OBSTINADO' (id=4)
+
+                    if Perceber evoluções no seu físico:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL PROGRESSIVO' (id=5)
+
+                    if cobrança/acompanhamento individual :
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL REATIVO' (id=6)
+            
+            if não sei o que fazer:
+
+                * O que te deixa mais perdido?
+
+                    if nao sei qual dieta seguir:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL SEM DIREÇÃO' (id=7)
+
+                    if vejo varios treinos diferentes e não sei qual seguir:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL SEM DIREÇÃO' (id=7)
+
+                    if falta de demostração/explicação dos exercicios:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL SEM DIREÇÃO' (id=8)
+
+    if 3 à 4:
+
+        * Qual seu objetivo atual?
+
+            if me sinto estagnado e quero voltar a evoluir:
+
+                * por que voce acha que está estagnado?
+
+                    if sinto que meu treino/dieta não funcionam:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL BLOQUEADO' (id=9)
+                    
+                    if meu físico não evolui:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL BLOQUEADO' (id=9)
+
+                    if minha rotina não se encaixa mais no meu objetivo:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL DESALINHADO' (id=10)
+            
+            if quero uma mudança no planejamento dos treinos:
+
+                * O que voce busca com essa mudança?
+
+                    if quero um treino mais dinâmico:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL ENÉRGICO' (id=11)
+
+                    if quero um acompanhamento individual e personalizado:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL EXIGENTE' (id=12)
+
+                    if quero um treino mais flexível:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL MALEÁVEL' (id=13)
+
+            if quero melhorar minha saúde:
+
+                * Em qual área voce sente que mais te afeta:
+
+                    if articulações e desgates físicos:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL LONGEVIDADE' (id=14)
+
+                    if alterações no exame de sangue (colesterol, trigliceres, etc):
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL LONGEVIDADE' (id=14)
+
+                    if mental (sono, ansiedade e humor):
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL LONGEVIDADE' (id=14)
+
+    if 5 ou mais:
+
+        * Qual seu objetivo atual?
+
+            if me sinto estagnado e quero voltar a evoluir:
+
+                * por que voce acha que está estagnado?
+
+                    if sinto que meu treino/dieta não funcionam:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL BLOQUEADO' (id=9)
+                    
+                    if meu físico não evolui:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL BLOQUEADO' (id=9)
+
+                    if minha rotina não se encaixa mais no meu objetivo:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL DESALINHADO' (id=10)
+            
+            if quero uma mudança no planejamento dos treinos:
+
+                * O que voce busca com essa mudança?
+
+                    if quero um treino mais dinâmico:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL ENÉRGICO' (id=11)
+
+                    if quero um acompanhamento individual e personalizado:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL EXIGENTE' (id=12)
+
+                    if quero um treino mais flexível:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL MALEÁVEL' (id=13)
+
+            if quero melhorar minha saúde:
+
+                * Em qual área voce sente que mais te afeta:
+
+                    if articulações e desgates físicos:
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL LONGEVIDADE' (id=14)
+
+                    if alterações no exame de sangue (colesterol, trigliceres, etc):
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL LONGEVIDADE' (id=14)
+
+                    if mental (sono, ansiedade e humor):
+
+                        * Qual objetivo voce busca?
+
+                            - Ganhar Musculos
+
+                            - Perder Peso
+
+                            - Aumentar Força
+                            
+                            PAGINA 'PERFIL LONGEVIDADE' (id=14)

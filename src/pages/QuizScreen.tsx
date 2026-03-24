@@ -3,82 +3,222 @@ import { ScreenContainer } from "@/components/ui/ScreenContainer";
 import { QuizOption } from "@/components/ui/QuizOption";
 import { ProgressBar } from "@/components/ProgressBar";
 import { LoadingAnalysis } from "@/components/LoadingAnalysis";
-import { useQuiz } from "@/hooks/useQuiz";
+import { useQuiz, QuizAnswers } from "@/hooks/useQuiz";
 import { analytics } from "@/lib/analytics";
 import { useEffect, useState } from "react";
 
+interface QuizQuestion {
+  question: string;
+  key: keyof QuizAnswers;
+  options: string[];
+  icon: string;
+}
+
 /**
- * Perguntas e opções do Quiz
+ * Determina a pergunta a exibir no step atual com base
+ * nas respostas anteriores armazenadas no contexto.
  */
-const QUIZ_DATA = [
-  {
-    id: 1,
-    question: "Quantos dias por semana você treina?",
-    key: "trainingDays" as const,
-    options: ["3x ou menos", "4x por semana", "5x ou mais"],
-  },
-  {
-    id: 2,
-    question: "O que mais te incomoda hoje no treino?",
-    key: "mainProblem" as const,
-    options: [
-      "Não consigo aumentar carga",
-      "Treino muito e evoluo pouco",
-      "Não sei se meu treino faz sentido",
-      "Resultados travaram faz meses",
-    ],
-  },
-  {
-    id: 3,
-    question: "Há quanto tempo você treina?",
-    key: "timeTraining" as const,
-    options: [
-      "Menos de 6 meses",
-      "Entre 6 meses e 2 anos",
-      "Mais de 2 anos e estou estagnado",
-    ],
-  },
-];
+function getQuestionForStep(
+  step: number,
+  answers: QuizAnswers,
+): QuizQuestion | null {
+  if (step === 1) {
+    return {
+      question: "Quantas vezes você vai à academia?",
+      key: "gymFrequency",
+      options: ["2 ou menos", "3 à 4 vezes", "5 ou mais"],
+      icon: "🏋️",
+    };
+  }
+
+  if (!answers.gymFrequency) return null;
+
+  if (step === 2) {
+    if (answers.gymFrequency === "2 ou menos") {
+      return {
+        question:
+          "Por qual motivo você não consegue manter uma frequência maior?",
+        key: "lowFreqReason",
+        options: ["Falta de tempo", "Pouca motivação", "Não sei o que fazer"],
+        icon: "🤔",
+      };
+    }
+    return {
+      question: "Qual seu objetivo atual?",
+      key: "currentGoal",
+      options: [
+        "Me sinto estagnado e quero voltar a evoluir",
+        "Quero uma mudança no planejamento dos treinos",
+        "Quero melhorar minha saúde",
+      ],
+      icon: "🎯",
+    };
+  }
+
+  if (!answers.lowFreqReason && !answers.currentGoal) return null;
+
+  if (step === 3) {
+    if (answers.lowFreqReason === "Falta de tempo") {
+      return {
+        question: "Qual horário de treino se encaixaria melhor na sua rotina?",
+        key: "trainingSchedule",
+        options: ["Manhã", "Tarde", "Noite"],
+        icon: "⏰",
+      };
+    }
+    if (answers.lowFreqReason === "Pouca motivação") {
+      return {
+        question: "O que mais te motivaria a continuar treinando?",
+        key: "motivationFactor",
+        options: [
+          "Competição",
+          "Perceber evoluções no seu físico",
+          "Cobrança/acompanhamento individual",
+        ],
+        icon: "🔥",
+      };
+    }
+    if (answers.lowFreqReason === "Não sei o que fazer") {
+      return {
+        question: "O que te deixa mais perdido?",
+        key: "confusionReason",
+        options: [
+          "Não sei qual dieta seguir",
+          "Vejo vários treinos diferentes e não sei qual seguir",
+          "Falta de demonstração/explicação dos exercícios",
+        ],
+        icon: "❓",
+      };
+    }
+    if (answers.currentGoal === "Me sinto estagnado e quero voltar a evoluir") {
+      return {
+        question: "Por que você acha que está estagnado?",
+        key: "stagnationReason",
+        options: [
+          "Sinto que meu treino/dieta não funcionam",
+          "Meu físico não evolui",
+          "Minha rotina não se encaixa mais no meu objetivo",
+        ],
+        icon: "😤",
+      };
+    }
+    if (
+      answers.currentGoal === "Quero uma mudança no planejamento dos treinos"
+    ) {
+      return {
+        question: "O que você busca com essa mudança?",
+        key: "changeDesire",
+        options: [
+          "Quero um treino mais dinâmico",
+          "Quero um acompanhamento individual e personalizado",
+          "Quero um treino mais flexível",
+        ],
+        icon: "💪",
+      };
+    }
+    if (answers.currentGoal === "Quero melhorar minha saúde") {
+      return {
+        question: "Em qual área você sente que mais te afeta?",
+        key: "healthArea",
+        options: [
+          "Articulações e desgastes físicos",
+          "Alterações no exame de sangue (colesterol, triglicérides, etc.)",
+          "Mental (sono, ansiedade e humor)",
+        ],
+        icon: "❤️",
+      };
+    }
+    return null;
+  }
+
+  if (step === 4) {
+    // Caminho "Falta de tempo": Q4 é duração na academia
+    if (answers.lowFreqReason === "Falta de tempo") {
+      if (!answers.trainingSchedule) return null;
+      return {
+        question: "Quanto tempo você conseguiria ficar na academia?",
+        key: "gymDuration",
+        options: [
+          "Menos de uma hora",
+          "Até uma hora e meia",
+          "Mais de uma hora e meia",
+        ],
+        icon: "⏱️",
+      };
+    }
+    // Todos os outros caminhos: Q4 é o objetivo final
+    return {
+      question: "Qual objetivo você busca?",
+      key: "finalObjective",
+      options: ["Ganhar Músculos", "Perder Peso", "Aumentar Força"],
+      icon: "🏆",
+    };
+  }
+
+  if (step === 5) {
+    // Somente alcançado no caminho "Falta de tempo"
+    if (answers.lowFreqReason === "Falta de tempo" && answers.gymDuration) {
+      return {
+        question: "Qual objetivo você busca?",
+        key: "finalObjective",
+        options: ["Ganhar Músculos", "Perder Peso", "Aumentar Força"],
+        icon: "🏆",
+      };
+    }
+    return null;
+  }
+
+  return null;
+}
+
+function getMaxSteps(answers: QuizAnswers): number {
+  return answers.lowFreqReason === "Falta de tempo" ? 5 : 4;
+}
 
 /**
  * TELA 2 - QUIZ INTERATIVO
  *
- * Mostra 1 pergunta por vez
- * Avança automaticamente ao clicar
- * Barra de progresso no topo
+ * Mostra 1 pergunta por vez com fluxo condicional.
+ * A pergunta exibida depende das respostas anteriores.
+ * Barra de progresso no topo.
  */
 export function QuizScreen() {
   const params = useParams<{ step: string }>();
   const [, setLocation] = useLocation();
-  const { setAnswer } = useQuiz();
+  const { answers, setAnswer } = useQuiz();
   const [showLoading, setShowLoading] = useState(false);
 
   const step = parseInt(params.step || "1");
-  const currentQuiz = QUIZ_DATA.find((q) => q.id === step);
-  const progress = (step / 3) * 100;
+
+  // Se está além do step 1 sem resposta inicial, redireciona
+  if (step > 1 && !answers.gymFrequency) {
+    setLocation("/quiz/1");
+    return null;
+  }
+
+  const currentQuiz = getQuestionForStep(step, answers);
+  const maxSteps = getMaxSteps(answers);
+  const progress = (step / maxSteps) * 100;
 
   useEffect(() => {
     analytics.trackPageView(`quiz_step_${step}`);
   }, [step]);
 
-  // Redirect se step inválido
-  if (!currentQuiz || step < 1 || step > 3) {
+  // Redireciona se step inválido ou estado inconsistente
+  if (!currentQuiz || step < 1 || step > 5) {
     setLocation("/quiz/1");
     return null;
   }
 
   const handleAnswer = (answer: string) => {
-    // Salva resposta
     setAnswer(currentQuiz.key, answer);
     analytics.trackQuizStep(step, answer);
 
-    // Avança para próxima etapa
-    if (step < 3) {
-      setLocation(`/quiz/${step + 1}`);
-    } else {
-      // Quiz completo - mostra tela de loading antes de ir para resultado
+    if (currentQuiz.key === "finalObjective") {
       analytics.trackQuizComplete();
       setShowLoading(true);
+    } else {
+      setLocation(`/quiz/${step + 1}`);
     }
   };
 
@@ -86,7 +226,6 @@ export function QuizScreen() {
     setLocation("/resultado");
   };
 
-  // Se está mostrando loading, renderiza a tela de análise
   if (showLoading) {
     return <LoadingAnalysis onComplete={handleLoadingComplete} />;
   }
@@ -101,7 +240,9 @@ export function QuizScreen() {
         <div className="space-y-4 mb-8">
           <div className="flex items-center justify-between text-sm font-medium">
             <span className="text-primary">📋 Diagnóstico</span>
-            <span className="text-muted-foreground">Etapa {step} de 3</span>
+            <span className="text-muted-foreground">
+              Etapa {step} de {maxSteps}
+            </span>
           </div>
           <ProgressBar progress={progress} />
         </div>
@@ -111,9 +252,7 @@ export function QuizScreen() {
           {/* Ícone da pergunta */}
           <div className="flex justify-center">
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-              <span className="text-3xl">
-                {step === 1 ? "⏱️" : step === 2 ? "🎯" : "📅"}
-              </span>
+              <span className="text-3xl">{currentQuiz.icon}</span>
             </div>
           </div>
 
@@ -134,7 +273,7 @@ export function QuizScreen() {
 
           {/* Indicador de progresso visual */}
           <div className="text-center text-sm text-muted-foreground">
-            {step < 3
+            {currentQuiz.key !== "finalObjective"
               ? "👆 Escolha uma opção para continuar"
               : "👆 Última pergunta!"}
           </div>
