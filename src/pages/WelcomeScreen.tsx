@@ -60,15 +60,12 @@ export function WelcomeScreen() {
           <div className="space-y-3">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight px-2">
               Descubra em <span className="text-primary">60 segundos</span> por
-              que seu treino não está dando resultados
-              <span className="block text-xl md:text-2xl font-medium text-muted-foreground mt-2">
-                — ou por que você não consegue se manter treinando
-              </span>
+              que você não tem o corpo dos sonhos
             </h1>
 
             {/* Subheadline */}
             <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto px-2">
-              Responda 5 perguntas rápidas e te mostraremos a solução.
+              Responda até 5 perguntas rápidas e resolva este problema.
             </p>
           </div>
 
