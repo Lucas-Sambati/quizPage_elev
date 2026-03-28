@@ -2,8 +2,25 @@ import { useLocation } from "wouter";
 import { ScreenContainer } from "@/components/ui/ScreenContainer";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { analytics } from "@/lib/analytics";
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useQuiz, QuizAnswers } from "@/hooks/useQuiz";
+
+/**
+ * Curva de easing para a barra de progresso da VSL.
+ * Faz a barra avançar rápido no início e desacelerar perto do fim,
+ * mas sempre terminar em 100% junto com o vídeo.
+ *
+ * Math.pow(x, 0.35) → ex: 10% real ≈ 45% visual, 50% real ≈ 80% visual
+ */
+function easeProgress(real: number): number {
+  return Math.pow(Math.min(Math.max(real, 0), 1), 0.35);
+}
+
+function formatTime(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
 
 /**
  * Tipos de perfil baseados nas respostas
@@ -113,6 +130,34 @@ const PROFILE_CONTENT: Record<ProfileType, ProfileContent> = {
 };
 
 /**
+ * URL base do bucket R2 público (Cloudflare)
+ */
+const R2_BASE_URL = "https://pub-5121bd5b7ba549e98a3f6c16f65c1928.r2.dev";
+
+/**
+ * Mapeamento hardcoded: perfil → nome do arquivo de vídeo no bucket R2.
+ * Altere os valores aqui caso os nomes dos objetos mudem.
+ */
+const PROFILE_VIDEO_MAP: Record<ProfileType, string> = {
+  OCUPADO: "VSL OCUPADO",
+  DESALINHADO: "VSL DESALINHADO",
+  OBSTINADO: "VSL OBSTINADO",
+  PROGRESSIVO: "VSL PROGRESSIVO",
+  REATIVO: "VSL REATIVO",
+  SEM_DIRECAO: "VSL SEM DIRECAO",
+  BLOQUEADO: "VSL BLOQUEADO",
+  ENERGICO: "VSL ENERGICO",
+  EXIGENTE: "VSL EXIGENTE",
+  MALEAVAL: "VSL MALEAVAL",
+  LONGEVIDADE: "VSL LONGEVIDADE",
+};
+
+function getVideoUrl(profile: ProfileType): string {
+  const objectKey = PROFILE_VIDEO_MAP[profile];
+  return `${R2_BASE_URL}/${encodeURIComponent(objectKey)}.mp4`;
+}
+
+/**
  * TELA 3 - DIAGNÓSTICO PERSONALIZADO
  *
  * Objetivo: gerar identificação + dor + urgência
@@ -128,6 +173,32 @@ export function ResultScreen() {
 
   const profileType = getProfile(answers);
   const content = PROFILE_CONTENT[profileType];
+  const videoUrl = getVideoUrl(profileType);
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [realProgress, setRealProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [hasEnded, setHasEnded] = useState(false);
+
+  const togglePlay = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  }, []);
+
+  const handleTimeUpdate = useCallback(() => {
+    const video = videoRef.current;
+    if (!video || !video.duration) return;
+    setCurrentTime(video.currentTime);
+    setRealProgress(video.currentTime / video.duration);
+  }, []);
 
   const handleContinue = () => {
     analytics.trackCTAClick("result_screen");
@@ -160,6 +231,97 @@ export function ResultScreen() {
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary uppercase tracking-wide">
             {content.profileTitle}
           </h2>
+
+          {/* VSL do perfil (9:16) — Player customizado */}
+          <div
+            className="w-full max-w-sm mx-auto rounded-xl border-2 border-primary/30 overflow-hidden relative shadow-lg shadow-primary/10 bg-black"
+            style={{ aspectRatio: "9/16" }}
+          >
+            <video
+              ref={videoRef}
+              src={videoUrl}
+              className="absolute inset-0 w-full h-full object-cover"
+              playsInline
+              preload="auto"
+              onLoadedData={() => {
+                setVideoLoaded(true);
+                if (videoRef.current) setDuration(videoRef.current.duration);
+              }}
+              onTimeUpdate={handleTimeUpdate}
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+              onEnded={() => {
+                setIsPlaying(false);
+                setHasEnded(true);
+                setRealProgress(1);
+              }}
+            />
+
+            {/* Overlay de play/pause — toque em qualquer lugar */}
+            <div
+              className="absolute inset-0 z-10 cursor-pointer"
+              onClick={togglePlay}
+            >
+              {/* Botão play central — visível quando pausado */}
+              {!isPlaying && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-opacity">
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/90 flex items-center justify-center shadow-xl shadow-primary/30">
+                    <svg
+                      className="w-8 h-8 md:w-10 md:h-10 text-white ml-1"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      {hasEnded ? (
+                        <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
+                      ) : (
+                        <path d="M8 5v14l11-7z" />
+                      )}
+                    </svg>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Barra de progresso customizada (bottom) */}
+            {videoLoaded && (
+              <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
+                {/* Tempo decorrido */}
+                <div className="flex justify-between items-center px-3 pb-1">
+                  <span className="text-[11px] font-mono text-white/70 drop-shadow">
+                    {formatTime(currentTime)}
+                  </span>
+                  <span className="text-[11px] font-mono text-white/70 drop-shadow">
+                    {formatTime(duration)}
+                  </span>
+                </div>
+                {/* Trilho da barra */}
+                <div className="h-1 bg-white/20">
+                  <div
+                    className="h-full bg-primary transition-[width] duration-300 ease-out"
+                    style={{ width: `${easeProgress(realProgress) * 100}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Loading placeholder */}
+            {!videoLoaded && (
+              <div className="absolute inset-0 flex items-center justify-center z-10">
+                <div className="flex flex-col items-center gap-3 text-muted-foreground">
+                  <svg
+                    className="w-14 h-14 text-primary/60 animate-pulse"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                  <span className="text-sm font-medium text-foreground/50">
+                    Carregando vídeo...
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* 1. Validação emocional */}
           <div className="bg-primary/5 rounded-lg p-4 md:p-5 border border-primary/20">
