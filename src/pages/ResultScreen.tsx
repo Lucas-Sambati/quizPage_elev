@@ -40,14 +40,6 @@ type ProfileType =
 
 interface ProfileContent {
   profileTitle: string;
-  validation: string;
-  errorTitle: string;
-  subtitleBefore: string;
-  subtitleHighlight: string;
-  description: string;
-  secondaryDescription: string;
-  consequence: string;
-  solutionIntro: string;
 }
 
 /**
@@ -96,21 +88,7 @@ function getProfile(answers: QuizAnswers): ProfileType {
 /**
  * Conteúdo base compartilhado por todos os perfis
  */
-const BASE_CONTENT = {
-  validation:
-    "Esse é um dos perfis mais comuns entre quem treina e não vê resultado.",
-  errorTitle: "O Excesso de Volume",
-  subtitleBefore: "O erro do perfil Treina Demais não é falta de esforço — ",
-  subtitleHighlight: "é excesso dele",
-  description:
-    "Treinar 5x ou mais por semana com volume alto gera fadiga constante e impede a recuperação muscular adequada.",
-  secondaryDescription:
-    "Seus músculos crescem no descanso, não no treino. Sem recuperação suficiente, você só acumula cansaço.",
-  consequence:
-    "Se continuar assim, em alguns meses seu corpo vai estar praticamente igual.",
-  solutionIntro:
-    "Esse plano é para quem se dedica, mas não vê retorno proporcional ao esforço.",
-};
+const BASE_CONTENT = {};
 
 /**
  * Conteúdo personalizado para cada perfil
@@ -152,10 +130,12 @@ const PROFILE_VIDEO_MAP: Record<ProfileType, string> = {
   LONGEVIDADE: "VSL LONGEVIDADE",
 };
 
-function getVideoUrl(profile: ProfileType): string {
+export function getVideoUrl(profile: ProfileType): string {
   const objectKey = PROFILE_VIDEO_MAP[profile];
   return `${R2_BASE_URL}/${encodeURIComponent(objectKey)}.mp4`;
 }
+
+export { getProfile, type ProfileType };
 
 /**
  * TELA 3 - DIAGNÓSTICO PERSONALIZADO
@@ -178,10 +158,12 @@ export function ResultScreen() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isBuffering, setIsBuffering] = useState(false);
   const [realProgress, setRealProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [hasEnded, setHasEnded] = useState(false);
+  const [showCTA, setShowCTA] = useState(false);
 
   const togglePlay = useCallback(() => {
     const video = videoRef.current;
@@ -198,6 +180,9 @@ export function ResultScreen() {
     if (!video || !video.duration) return;
     setCurrentTime(video.currentTime);
     setRealProgress(video.currentTime / video.duration);
+    if (video.duration - video.currentTime <= 15) {
+      setShowCTA(true);
+    }
   }, []);
 
   const handleContinue = () => {
@@ -248,14 +233,27 @@ export function ResultScreen() {
                 if (videoRef.current) setDuration(videoRef.current.duration);
               }}
               onTimeUpdate={handleTimeUpdate}
-              onPlay={() => setIsPlaying(true)}
+              onPlay={() => {
+                setIsPlaying(true);
+                setIsBuffering(false);
+              }}
               onPause={() => setIsPlaying(false)}
+              onWaiting={() => setIsBuffering(true)}
+              onPlaying={() => setIsBuffering(false)}
               onEnded={() => {
                 setIsPlaying(false);
+                setIsBuffering(false);
                 setHasEnded(true);
                 setRealProgress(1);
               }}
             />
+
+            {/* Spinner de buffering */}
+            {isBuffering && isPlaying && (
+              <div className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none">
+                <div className="w-12 h-12 border-4 border-white/30 border-t-primary rounded-full animate-spin" />
+              </div>
+            )}
 
             {/* Overlay de play/pause — toque em qualquer lugar */}
             <div
@@ -323,94 +321,21 @@ export function ResultScreen() {
             )}
           </div>
 
-          {/* 1. Validação emocional */}
-          <div className="bg-primary/5 rounded-lg p-4 md:p-5 border border-primary/20">
-            <p className="text-base md:text-lg text-foreground/90 leading-relaxed">
-              {content.validation}
-            </p>
-          </div>
-
-          {/* 2. Nome do erro principal */}
-          <div className="space-y-3">
-            <h3 className="text-2xl md:text-3xl font-bold text-foreground">
-              {content.errorTitle}
-            </h3>
-
-            <p className="text-xl md:text-2xl font-bold text-foreground leading-tight">
-              {content.subtitleBefore}
-              <span className="text-primary">{content.subtitleHighlight}</span>
-            </p>
-          </div>
-
-          {/* 3. Explicação simples do erro */}
-          <div className="space-y-3 text-left">
-            <div className="bg-background/80 backdrop-blur-sm rounded-lg p-4 md:p-5 border border-primary/10">
-              <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
-                {content.description}
+          {/* CTA — aparece quando faltam 15s no vídeo */}
+          {showCTA && (
+            <div className="flex flex-col items-center space-y-2 md:space-y-3 pt-2 md:pt-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <CTAButton
+                size="lg"
+                onClick={handleContinue}
+                className="w-full shadow-2xl shadow-primary/20 hover:shadow-primary/30"
+              >
+                Quero meu plano personalizado
+              </CTAButton>
+              <p className="text-xs text-muted-foreground">
+                Próxima etapa: o que fazer a partir de agora
               </p>
             </div>
-
-            <div className="bg-background/80 backdrop-blur-sm rounded-lg p-4 md:p-5 border border-primary/10">
-              <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
-                {content.secondaryDescription}
-              </p>
-            </div>
-          </div>
-
-          {/* 4. Consequência futura (realista) */}
-          <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-lg p-4 md:p-5 border border-amber-500/20">
-            <p className="text-base md:text-lg text-foreground/90 leading-relaxed font-medium">
-              {content.consequence}
-            </p>
-          </div>
-
-          {/* 5. Como corrigir isso - 3 pilares */}
-          <div className="space-y-4 pt-2">
-            <h3 className="text-xl md:text-2xl font-bold text-foreground">
-              Como corrigir isso:
-            </h3>
-
-            <div className="space-y-3 text-left">
-              {[
-                "Um treino ajustado à sua rotina",
-                "Um plano alimentar simples e sustentável",
-                "Um método claro de progressão semanal",
-              ].map((pilar, index) => (
-                <div
-                  key={index}
-                  className="bg-background/80 backdrop-blur-sm rounded-lg p-4 border border-primary/10 flex items-center gap-3"
-                >
-                  <span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-sm font-semibold flex items-center justify-center flex-shrink-0">
-                    {index + 1}
-                  </span>
-                  <p className="text-base md:text-lg text-foreground font-medium">
-                    {pilar}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* 6. Introdução da solução personalizada */}
-          <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg p-5 md:p-6 border border-primary/20">
-            <p className="text-base md:text-lg text-foreground leading-relaxed">
-              {content.solutionIntro}
-            </p>
-          </div>
-
-          {/* CTA */}
-          <div className="flex flex-col items-center space-y-2 md:space-y-3 pt-2 md:pt-4">
-            <CTAButton
-              size="lg"
-              onClick={handleContinue}
-              className="w-full shadow-2xl shadow-primary/20 hover:shadow-primary/30"
-            >
-              Quero meu plano personalizado
-            </CTAButton>
-            <p className="text-xs text-muted-foreground">
-              Próxima etapa: o que fazer a partir de agora
-            </p>
-          </div>
+          )}
         </div>
       </div>
     </ScreenContainer>

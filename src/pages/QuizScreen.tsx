@@ -4,8 +4,9 @@ import { QuizOption } from "@/components/ui/QuizOption";
 import { ProgressBar } from "@/components/ProgressBar";
 import { LoadingAnalysis } from "@/components/LoadingAnalysis";
 import { useQuiz, QuizAnswers } from "@/hooks/useQuiz";
+import { getProfile, getVideoUrl } from "@/pages/ResultScreen";
 import { analytics } from "@/lib/analytics";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface QuizQuestion {
   question: string;
@@ -187,6 +188,7 @@ export function QuizScreen() {
   const [, setLocation] = useLocation();
   const { answers, setAnswer } = useQuiz();
   const [showLoading, setShowLoading] = useState(false);
+  const prefetchedRef = useRef(false);
 
   const step = parseInt(params.step || "1");
 
@@ -213,6 +215,26 @@ export function QuizScreen() {
   const handleAnswer = (answer: string) => {
     setAnswer(currentQuiz.key, answer);
     analytics.trackQuizStep(step, answer);
+
+    // Prefetch: na penúltima pergunta já sabemos o perfil (finalObjective não altera o resultado).
+    // Projetamos as respostas incluindo a atual e determinamos o vídeo para começar o download.
+    const isPenultimate = step === maxSteps - 1;
+    if (isPenultimate && !prefetchedRef.current) {
+      prefetchedRef.current = true;
+      try {
+        const projected = { ...answers, [currentQuiz.key]: answer };
+        const profile = getProfile(projected);
+        const videoUrl = getVideoUrl(profile);
+        const link = document.createElement("link");
+        link.rel = "preload";
+        link.as = "video";
+        link.href = videoUrl;
+        link.type = "video/mp4";
+        document.head.appendChild(link);
+      } catch {
+        // silently ignore — prefetch is best-effort
+      }
+    }
 
     if (currentQuiz.key === "finalObjective") {
       analytics.trackQuizComplete();
