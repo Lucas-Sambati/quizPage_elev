@@ -60,7 +60,7 @@ const useCustomLocation = () => {
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="light">
+      <ThemeProvider defaultTheme="dark">
         <QuizProvider>
           <Router hook={useCustomLocation}>
             <Switch>
