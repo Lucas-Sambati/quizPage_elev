@@ -325,11 +325,7 @@ export function ResultScreen() {
           {/* CTA — aparece quando faltam 15s no vídeo */}
           {showCTA && (
             <div className="flex flex-col items-center space-y-2 md:space-y-3 pt-2 md:pt-4 pb-4 animate-fade-in-up">
-              <CTAButton
-                size="lg"
-                onClick={handleContinue}
-                className="w-full"
-              >
+              <CTAButton size="lg" onClick={handleContinue} className="w-full">
                 Quero meu plano personalizado
               </CTAButton>
               <p className="text-xs text-muted-foreground">
