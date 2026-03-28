@@ -113,4 +113,75 @@
   .animate-float {
     animation: float 4s ease-in-out infinite;
   }
+
+  /* Fade-in com slide de baixo */
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.5s ease-out both;
+  }
+
+  /* Staggered children (delay progressivo) */
+  .stagger > :nth-child(1) {
+    animation-delay: 0ms;
+  }
+  .stagger > :nth-child(2) {
+    animation-delay: 80ms;
+  }
+  .stagger > :nth-child(3) {
+    animation-delay: 160ms;
+  }
+  .stagger > :nth-child(4) {
+    animation-delay: 240ms;
+  }
+  .stagger > :nth-child(5) {
+    animation-delay: 320ms;
+  }
+  .stagger > :nth-child(6) {
+    animation-delay: 400ms;
+  }
+
+  /* Glow pulsante para CTA */
+  @keyframes cta-glow {
+    0%,
+    100% {
+      box-shadow:
+        0 0 20px hsl(var(--primary) / 0.3),
+        0 4px 16px hsl(var(--primary) / 0.15);
+    }
+    50% {
+      box-shadow:
+        0 0 32px hsl(var(--primary) / 0.45),
+        0 4px 24px hsl(var(--primary) / 0.25);
+    }
+  }
+
+  .animate-cta-glow {
+    animation: cta-glow 2.5s ease-in-out infinite;
+  }
+
+  /* Gradiente animado no fundo */
+  @keyframes gradient-shift {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 8s ease infinite;
+  }
 }

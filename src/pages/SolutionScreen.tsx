@@ -3,7 +3,7 @@ import { ScreenContainer } from "@/components/ui/ScreenContainer";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { analytics } from "@/lib/analytics";
 import { useEffect, useState } from "react";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, HelpCircle } from "lucide-react";
 import { useQuiz, QuizAnswers } from "@/hooks/useQuiz";
 
 /**
@@ -171,6 +171,7 @@ export function SolutionScreen() {
     <ScreenContainer fullHeight>
       {/* Background com gradiente */}
       <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-primary/3 to-primary/10 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.08),transparent_60%)] pointer-events-none" />
 
       <div className="relative flex-1 flex flex-col justify-between py-8 md:py-12">
         {/* Topo com badge de credibilidade */}
@@ -335,7 +336,7 @@ export function SolutionScreen() {
           <div className="bg-background/80 backdrop-blur-sm rounded-lg p-4 md:p-5 border border-primary/10 space-y-4">
             <div className="space-y-2">
               <p className="text-base md:text-lg font-bold text-foreground flex items-start gap-2">
-                <span className="text-primary">❓</span>
+                <HelpCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                 <span>Isso serve pra iniciantes?</span>
               </p>
               <p className="text-sm md:text-base text-muted-foreground pl-7">
@@ -347,7 +348,7 @@ export function SolutionScreen() {
 
             <div className="space-y-2">
               <p className="text-base md:text-lg font-bold text-foreground flex items-start gap-2">
-                <span className="text-primary">❓</span>
+                <HelpCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                 <span>Preciso seguir dieta rígida?</span>
               </p>
               <p className="text-sm md:text-base text-muted-foreground pl-7">
@@ -359,7 +360,7 @@ export function SolutionScreen() {
 
             <div className="space-y-2">
               <p className="text-base md:text-lg font-bold text-foreground flex items-start gap-2">
-                <span className="text-primary">❓</span>
+                <HelpCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                 <span>Como recebo o acesso?</span>
               </p>
               <p className="text-sm md:text-base text-muted-foreground pl-7">

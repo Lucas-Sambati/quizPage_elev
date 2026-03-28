@@ -3,6 +3,7 @@ import { ScreenContainer } from "@/components/ui/ScreenContainer";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { analytics } from "@/lib/analytics";
 import { useEffect } from "react";
+import { Rocket, Clock, ShieldCheck, Check } from "lucide-react";
 
 /**
  * TELA 1 - ENTRADA / HOOK
@@ -25,8 +26,9 @@ export function WelcomeScreen() {
 
   return (
     <ScreenContainer fullHeight>
-      {/* Background com gradiente sutil */}
+      {/* Background com gradiente sutil animado */}
       <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-primary/10 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.08),transparent_60%)] pointer-events-none" />
 
       <div className="relative flex-1 flex flex-col justify-between py-8 md:py-12">
         {/* Topo com badge de credibilidade */}
@@ -70,16 +72,17 @@ export function WelcomeScreen() {
           </div>
 
           {/* Benefícios em lista */}
-          <div className="flex flex-col items-center gap-2 max-w-md mx-auto">
+          <div className="flex flex-col items-center gap-2.5 max-w-md mx-auto stagger">
             {[
-              "✓ Direcionamento baseado no seu perfil",
-              "✓ Resultados imediatos",
-              "✓ 100% gratuito",
+              "Direcionamento baseado no seu perfil",
+              "Resultados imediatos",
+              "100% gratuito",
             ].map((benefit, index) => (
               <div
                 key={index}
-                className="flex items-center gap-2 text-sm md:text-base text-foreground/80"
+                className="flex items-center gap-2.5 text-sm md:text-base text-foreground/80 animate-fade-in-up"
               >
+                <Check className="w-4 h-4 text-primary flex-shrink-0" />
                 <span>{benefit}</span>
               </div>
             ))}
@@ -91,18 +94,21 @@ export function WelcomeScreen() {
           <CTAButton
             size="lg"
             onClick={handleStart}
-            className="w-full max-w-md shadow-2xl shadow-primary/20 hover:shadow-primary/30"
+            className="w-full max-w-md"
           >
-            🚀 Começar diagnóstico gratuito
+            <Rocket className="w-5 h-5 mr-2" />
+            Começar diagnóstico gratuito
           </CTAButton>
 
           {/* Textos auxiliares de confiança */}
-          <div className="space-y-1 text-center">
-            <p className="text-xs md:text-sm text-muted-foreground">
-              ⏱️ Leva menos de 1 minuto
+          <div className="flex flex-col items-center gap-2.5">
+            <p className="text-xs md:text-sm text-muted-foreground inline-flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5" />
+              Leva menos de 1 minuto
             </p>
-            <p className="text-xs md:text-sm text-muted-foreground">
-              🔒 Não precisa de cadastro
+            <p className="text-xs md:text-sm text-muted-foreground inline-flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              Não precisa de cadastro
             </p>
           </div>
         </div>

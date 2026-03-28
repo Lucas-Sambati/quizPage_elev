@@ -13,11 +13,18 @@ interface ProgressBarProps {
  */
 export function ProgressBar({ progress, className }: ProgressBarProps) {
   return (
-    <div className={cn("w-full bg-gray-200 rounded-full h-1.5", className)}>
+    <div
+      className={cn(
+        "w-full bg-muted rounded-full h-2 overflow-hidden",
+        className,
+      )}
+    >
       <div
-        className="bg-primary h-1.5 rounded-full transition-all duration-500 ease-out"
+        className="h-full rounded-full transition-all duration-500 ease-out bg-gradient-to-r from-primary via-primary/80 to-primary relative"
         style={{ width: `${progress}%` }}
-      />
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent animate-shimmer" />
+      </div>
     </div>
   );
 }

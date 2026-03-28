@@ -13,7 +13,7 @@ import { useQuiz, QuizAnswers } from "@/hooks/useQuiz";
  * Math.pow(x, 0.35) → ex: 10% real ≈ 45% visual, 50% real ≈ 80% visual
  */
 function easeProgress(real: number): number {
-  return Math.pow(Math.min(Math.max(real, 0), 1), 0.35);
+  return Math.pow(Math.min(Math.max(real, 0), 1), 0.45);
 }
 
 function formatTime(seconds: number): string {
@@ -191,9 +191,10 @@ export function ResultScreen() {
   };
 
   return (
-    <ScreenContainer fullHeight>
+    <ScreenContainer fullHeight className="overflow-y-auto">
       {/* Background com gradiente */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-primary/3 to-primary/10 pointer-events-none" />
+      <div className="fixed inset-0 bg-gradient-to-b from-primary/5 via-primary/3 to-primary/10 pointer-events-none" />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.08),transparent_60%)] pointer-events-none" />
 
       <div className="relative flex-1 flex flex-col justify-between py-8 md:py-12">
         {/* Topo com badge de credibilidade */}
@@ -213,13 +214,13 @@ export function ResultScreen() {
         {/* Conteúdo central */}
         <div className="flex-1 flex flex-col justify-center space-y-5 md:space-y-7 text-center px-4 max-w-2xl mx-auto w-full">
           {/* Título do perfil */}
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary uppercase tracking-wide">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary uppercase tracking-wide animate-fade-in-up">
             {content.profileTitle}
           </h2>
 
           {/* VSL do perfil (9:16) — Player customizado */}
           <div
-            className="w-full max-w-sm mx-auto rounded-xl border-2 border-primary/30 overflow-hidden relative shadow-lg shadow-primary/10 bg-black"
+            className="w-full max-w-sm mx-auto rounded-2xl border-2 border-primary/20 overflow-hidden relative shadow-xl shadow-primary/10 bg-black"
             style={{ aspectRatio: "9/16" }}
           >
             <video
@@ -323,11 +324,11 @@ export function ResultScreen() {
 
           {/* CTA — aparece quando faltam 15s no vídeo */}
           {showCTA && (
-            <div className="flex flex-col items-center space-y-2 md:space-y-3 pt-2 md:pt-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex flex-col items-center space-y-2 md:space-y-3 pt-2 md:pt-4 pb-4 animate-fade-in-up">
               <CTAButton
                 size="lg"
                 onClick={handleContinue}
-                className="w-full shadow-2xl shadow-primary/20 hover:shadow-primary/30"
+                className="w-full"
               >
                 Quero meu plano personalizado
               </CTAButton>

@@ -7,6 +7,33 @@ import { useQuiz, QuizAnswers } from "@/hooks/useQuiz";
 import { getProfile, getVideoUrl } from "@/pages/ResultScreen";
 import { analytics } from "@/lib/analytics";
 import { useEffect, useRef, useState } from "react";
+import {
+  Dumbbell,
+  HelpCircle,
+  Target,
+  Clock,
+  Flame,
+  Heart,
+  Timer,
+  Trophy,
+  ClipboardList,
+  ArrowUp,
+} from "lucide-react";
+
+/** Mapa de ícone por key da pergunta */
+const QUESTION_ICONS: Record<string, React.ReactNode> = {
+  gymFrequency: <Dumbbell className="w-7 h-7 text-primary" />,
+  lowFreqReason: <HelpCircle className="w-7 h-7 text-primary" />,
+  currentGoal: <Target className="w-7 h-7 text-primary" />,
+  trainingSchedule: <Clock className="w-7 h-7 text-primary" />,
+  motivationFactor: <Flame className="w-7 h-7 text-primary" />,
+  confusionReason: <HelpCircle className="w-7 h-7 text-primary" />,
+  stagnationReason: <ArrowUp className="w-7 h-7 text-primary" />,
+  changeDesire: <Target className="w-7 h-7 text-primary" />,
+  healthArea: <Heart className="w-7 h-7 text-primary" />,
+  gymDuration: <Timer className="w-7 h-7 text-primary" />,
+  finalObjective: <Trophy className="w-7 h-7 text-primary" />,
+};
 
 interface QuizQuestion {
   question: string;
@@ -28,7 +55,7 @@ function getQuestionForStep(
       question: "Quantas vezes você vai à academia?",
       key: "gymFrequency",
       options: ["2 ou menos", "3 à 4 vezes", "5 ou mais"],
-      icon: "🏋️",
+      icon: "gym",
     };
   }
 
@@ -41,7 +68,7 @@ function getQuestionForStep(
           "Por qual motivo você não consegue manter uma frequência maior?",
         key: "lowFreqReason",
         options: ["Falta de tempo", "Pouca motivação", "Não sei o que fazer"],
-        icon: "🤔",
+        icon: "reason",
       };
     }
     return {
@@ -52,7 +79,7 @@ function getQuestionForStep(
         "Quero uma mudança no planejamento dos treinos",
         "Quero melhorar minha saúde",
       ],
-      icon: "🎯",
+      icon: "goal",
     };
   }
 
@@ -64,7 +91,7 @@ function getQuestionForStep(
         question: "Qual horário de treino se encaixaria melhor na sua rotina?",
         key: "trainingSchedule",
         options: ["Manhã", "Tarde", "Noite"],
-        icon: "⏰",
+        icon: "schedule",
       };
     }
     if (answers.lowFreqReason === "Pouca motivação") {
@@ -76,7 +103,7 @@ function getQuestionForStep(
           "Perceber evoluções no seu físico",
           "Cobrança/acompanhamento individual",
         ],
-        icon: "🔥",
+        icon: "motivation",
       };
     }
     if (answers.lowFreqReason === "Não sei o que fazer") {
@@ -88,7 +115,7 @@ function getQuestionForStep(
           "Vejo vários treinos diferentes e não sei qual seguir",
           "Falta de demonstração/explicação dos exercícios",
         ],
-        icon: "❓",
+        icon: "confusion",
       };
     }
     if (answers.currentGoal === "Me sinto estagnado e quero voltar a evoluir") {
@@ -100,7 +127,7 @@ function getQuestionForStep(
           "Meu físico não evolui",
           "Minha rotina não se encaixa mais no meu objetivo",
         ],
-        icon: "😤",
+        icon: "stagnation",
       };
     }
     if (
@@ -114,7 +141,7 @@ function getQuestionForStep(
           "Quero um acompanhamento individual e personalizado",
           "Quero um treino mais flexível",
         ],
-        icon: "💪",
+        icon: "change",
       };
     }
     if (answers.currentGoal === "Quero melhorar minha saúde") {
@@ -126,7 +153,7 @@ function getQuestionForStep(
           "Alterações no exame de sangue (colesterol, triglicérides, etc.)",
           "Mental (sono, ansiedade e humor)",
         ],
-        icon: "❤️",
+        icon: "health",
       };
     }
     return null;
@@ -144,7 +171,7 @@ function getQuestionForStep(
           "Até uma hora e meia",
           "Mais de uma hora e meia",
         ],
-        icon: "⏱️",
+        icon: "duration",
       };
     }
     // Todos os outros caminhos: Q4 é o objetivo final
@@ -152,7 +179,7 @@ function getQuestionForStep(
       question: "Qual objetivo você busca?",
       key: "finalObjective",
       options: ["Ganhar Músculos", "Perder Peso", "Aumentar Força"],
-      icon: "🏆",
+      icon: "objective",
     };
   }
 
@@ -163,7 +190,7 @@ function getQuestionForStep(
         question: "Qual objetivo você busca?",
         key: "finalObjective",
         options: ["Ganhar Músculos", "Perder Peso", "Aumentar Força"],
-        icon: "🏆",
+        icon: "objective",
       };
     }
     return null;
@@ -261,7 +288,9 @@ export function QuizScreen() {
         {/* Cabeçalho com progresso */}
         <div className="space-y-4 mb-8">
           <div className="flex items-center justify-between text-sm font-medium">
-            <span className="text-primary">📋 Diagnóstico</span>
+            <span className="text-primary inline-flex items-center gap-1.5">
+              <ClipboardList className="w-4 h-4" /> Diagnóstico
+            </span>
             <span className="text-muted-foreground">
               Etapa {step} de {maxSteps}
             </span>
@@ -272,9 +301,11 @@ export function QuizScreen() {
         {/* Pergunta - centralizada verticalmente */}
         <div className="flex-1 flex flex-col justify-center space-y-8 max-w-xl mx-auto w-full">
           {/* Ícone da pergunta */}
-          <div className="flex justify-center">
-            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-              <span className="text-3xl">{currentQuiz.icon}</span>
+          <div className="flex justify-center animate-fade-in-up">
+            <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/20">
+              {QUESTION_ICONS[currentQuiz.key] ?? (
+                <Target className="w-7 h-7 text-primary" />
+              )}
             </div>
           </div>
 
@@ -283,7 +314,7 @@ export function QuizScreen() {
           </h2>
 
           {/* Opções */}
-          <div className="space-y-3">
+          <div className="space-y-3 stagger">
             {currentQuiz.options.map((option, index) => (
               <QuizOption
                 key={index}
@@ -294,10 +325,11 @@ export function QuizScreen() {
           </div>
 
           {/* Indicador de progresso visual */}
-          <div className="text-center text-sm text-muted-foreground">
+          <div className="text-center text-sm text-muted-foreground inline-flex items-center justify-center gap-1.5 w-full">
+            <ArrowUp className="w-3.5 h-3.5" />
             {currentQuiz.key !== "finalObjective"
-              ? "👆 Escolha uma opção para continuar"
-              : "👆 Última pergunta!"}
+              ? "Escolha uma opção para continuar"
+              : "Última pergunta!"}
           </div>
         </div>
       </div>
