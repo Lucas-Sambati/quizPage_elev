@@ -1,18 +1,28 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ScreenContainer } from "@/components/ui/ScreenContainer";
 import { Lightbulb } from "lucide-react";
 
 interface LoadingAnalysisProps {
   onComplete: () => void;
+  videoUrl?: string;
 }
+
+/** Tempo mínimo de exibição (ms) para manter a sensação de análise real */
+const MIN_DISPLAY_MS = 2000;
+/** Tempo máximo de espera pelo vídeo (ms) — fallback para redes lentas */
+const MAX_WAIT_MS = 12000;
 
 /**
  * Tela de transição com análise por IA
- * Mostra animação enquanto "processa" as respostas
+ * Pré-carrega o vídeo da VSL enquanto mostra animação
  */
-export function LoadingAnalysis({ onComplete }: LoadingAnalysisProps) {
+export function LoadingAnalysis({
+  onComplete,
+  videoUrl,
+}: LoadingAnalysisProps) {
   const [progress, setProgress] = useState(0);
   const [messageIndex, setMessageIndex] = useState(0);
+  const completedRef = useRef(false);
 
   const messages = [
     "Analisando suas respostas...",
@@ -21,33 +31,78 @@ export function LoadingAnalysis({ onComplete }: LoadingAnalysisProps) {
   ];
 
   useEffect(() => {
-    // Progresso da barra
+    const startTime = Date.now();
+    let videoReady = !videoUrl; // se não há URL, já está "pronto"
+
+    // Baixa o vídeo completamente via fetch para popular o cache do browser
+    const controller = new AbortController();
+    if (videoUrl) {
+      fetch(videoUrl, { signal: controller.signal })
+        .then((res) => {
+          if (!res.ok) throw new Error("fetch failed");
+          return res.blob();
+        })
+        .then(() => {
+          videoReady = true;
+          tryComplete();
+        })
+        .catch(() => {
+          // Em caso de erro (rede, abort), não bloqueia
+          videoReady = true;
+          tryComplete();
+        });
+    }
+
+    // Timeout máximo — nunca bloquear o usuário por muito tempo
+    const maxTimer = setTimeout(() => {
+      videoReady = true;
+      tryComplete();
+    }, MAX_WAIT_MS);
+
+    // Timer mínimo de exibição
+    let minElapsed = false;
+    const minTimer = setTimeout(() => {
+      minElapsed = true;
+      tryComplete();
+    }, MIN_DISPLAY_MS);
+
+    function tryComplete() {
+      if (completedRef.current) return;
+      if (minElapsed && videoReady) {
+        completedRef.current = true;
+        setProgress(100);
+        // Pequeno delay para o usuário ver 100%
+        setTimeout(() => onComplete(), 200);
+      }
+    }
+
+    // Progresso visual animado
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 100) {
+        if (prev >= 95) {
           clearInterval(progressInterval);
-          return 100;
+          return 95; // para em 95% até vídeo estar pronto
         }
-        return prev + 2;
+        // Acelera no início, desacelera no final
+        const elapsed = Date.now() - startTime;
+        const target = Math.min(95, (elapsed / MIN_DISPLAY_MS) * 90);
+        return Math.max(prev, target);
       });
-    }, 30); // Completa em ~1.5s
+    }, 50);
 
     // Mudança de mensagens
     const messageInterval = setInterval(() => {
-      setMessageIndex((prev) => (prev + 1) % messages.length);
+      setMessageIndex((prev) => (prev + 1) % 3);
     }, 600);
 
-    // Finaliza após 2 segundos
-    const timer = setTimeout(() => {
-      onComplete();
-    }, 2000);
-
     return () => {
+      controller.abort();
+      clearTimeout(maxTimer);
+      clearTimeout(minTimer);
       clearInterval(progressInterval);
       clearInterval(messageInterval);
-      clearTimeout(timer);
     };
-  }, [onComplete]);
+  }, [onComplete, videoUrl]);
 
   return (
     <ScreenContainer fullHeight>

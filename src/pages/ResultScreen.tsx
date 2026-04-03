@@ -158,12 +158,23 @@ export function ResultScreen() {
   const [showCTA, setShowCTA] = useState(false);
   const ctaRef = useRef<HTMLDivElement>(null);
   const hasScrolledToCTA = useRef(false);
+  const hasScrolledOnPlay = useRef(false);
 
   const togglePlay = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
     if (video.paused) {
       video.play().catch(() => {});
+      // Scroll para baixo somente no primeiro play
+      if (!hasScrolledOnPlay.current) {
+        hasScrolledOnPlay.current = true;
+        setTimeout(() => {
+          window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: "smooth",
+          });
+        }, 100);
+      }
     } else {
       video.pause();
     }
@@ -284,7 +295,7 @@ export function ResultScreen() {
             {videoLoaded && (
               <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
                 {/* Trilho da barra */}
-                <div className="h-1 bg-white/20">
+                <div className="h-[6px] bg-white/20">
                   <div
                     className="h-full bg-primary transition-[width] duration-300 ease-out"
                     style={{ width: `${easeProgress(realProgress) * 100}%` }}

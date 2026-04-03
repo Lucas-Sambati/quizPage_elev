@@ -276,7 +276,15 @@ export function QuizScreen() {
   };
 
   if (showLoading) {
-    return <LoadingAnalysis onComplete={handleLoadingComplete} />;
+    // Calcula a URL do vídeo do perfil para pré-carregar durante a análise
+    const profile = getProfile(answers);
+    const videoUrlToPreload = getVideoUrl(profile);
+    return (
+      <LoadingAnalysis
+        onComplete={handleLoadingComplete}
+        videoUrl={videoUrlToPreload}
+      />
+    );
   }
 
   return (
