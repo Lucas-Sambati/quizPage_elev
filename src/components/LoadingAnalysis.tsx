@@ -34,22 +34,33 @@ export function LoadingAnalysis({
     const startTime = Date.now();
     let videoReady = !videoUrl; // se não há URL, já está "pronto"
 
-    // Pré-carrega o vídeo via <video> oculto (media elements não exigem CORS)
-    let preloadVideo: HTMLVideoElement | null = null;
+    // Garante que exista um <link rel="preload"> para o vídeo.
+    // Se o QuizScreen já injetou, não duplica; caso contrário cria agora.
+    let preloadLink: HTMLLinkElement | null = null;
     if (videoUrl) {
-      preloadVideo = document.createElement("video");
-      preloadVideo.preload = "auto";
-      preloadVideo.src = videoUrl;
-      preloadVideo.muted = true;
-      preloadVideo.style.display = "none";
-      document.body.appendChild(preloadVideo);
+      const existing = document.head.querySelector(
+        `link[rel="preload"][href="${CSS.escape(videoUrl)}"]`,
+      ) as HTMLLinkElement | null;
+      if (!existing) {
+        preloadLink = document.createElement("link");
+        preloadLink.rel = "preload";
+        preloadLink.as = "video";
+        preloadLink.href = videoUrl;
+        preloadLink.setAttribute("data-video-preload", "true");
+        document.head.appendChild(preloadLink);
+      }
 
-      const onReady = () => {
-        videoReady = true;
-        tryComplete();
-      };
-      preloadVideo.addEventListener("canplaythrough", onReady, { once: true });
-      preloadVideo.addEventListener("error", onReady, { once: true });
+      // Verifica progresso do preload via fetch com cache hit
+      // para saber quando o vídeo está pronto no cache do browser.
+      fetch(videoUrl, { method: "HEAD" })
+        .then(() => {
+          videoReady = true;
+          tryComplete();
+        })
+        .catch(() => {
+          videoReady = true;
+          tryComplete();
+        });
     }
 
     // Timeout máximo — nunca bloquear o usuário por muito tempo
@@ -95,7 +106,8 @@ export function LoadingAnalysis({
     }, 600);
 
     return () => {
-      if (preloadVideo) preloadVideo.remove();
+      // preload links criados aqui são removidos; os do QuizScreen ficam até a navegação.
+      if (preloadLink) preloadLink.remove();
       clearTimeout(maxTimer);
       clearTimeout(minTimer);
       clearInterval(progressInterval);

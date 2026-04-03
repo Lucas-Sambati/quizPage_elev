@@ -253,18 +253,14 @@ export function QuizScreen() {
         const projected = { ...answers, [currentQuiz.key]: answer };
         const profile = getProfile(projected);
         const videoUrl = getVideoUrl(profile);
-        const vid = document.createElement("video");
-        vid.preload = "auto";
-        vid.src = videoUrl;
-        vid.muted = true;
-        vid.style.display = "none";
-        document.body.appendChild(vid);
-        // Remove o elemento oculto após carregar o suficiente (ou falhar)
-        const cleanup = () => {
-          vid.remove();
-        };
-        vid.addEventListener("canplaythrough", cleanup, { once: true });
-        vid.addEventListener("error", cleanup, { once: true });
+        // <link rel="preload"> tem prioridade alta na fila de rede do browser
+        // e o cache HTTP é reaproveitado pelo <video> real no ResultScreen.
+        const link = document.createElement("link");
+        link.rel = "preload";
+        link.as = "video";
+        link.href = videoUrl;
+        link.setAttribute("data-video-preload", "true");
+        document.head.appendChild(link);
       } catch {
         // silently ignore — prefetch is best-effort
       }
