@@ -205,7 +205,7 @@ export function ResultScreen() {
     const video = videoRef.current;
     if (!video || !video.duration) return;
     setRealProgress(video.currentTime / video.duration);
-    if (video.duration - video.currentTime <= 15) {
+    if (video.duration - video.currentTime <= 14) {
       setShowCTA(true);
     }
   }, []);
@@ -336,14 +336,14 @@ export function ResultScreen() {
                     <path d="M8 5v14l11-7z" />
                   </svg>
                   <span className="text-sm font-medium text-foreground/50">
-                    Carregando vídeo...
+                    Carregando resultado...
                   </span>
                 </div>
               </div>
             )}
           </div>
 
-          {/* CTA — aparece quando faltam 15s no vídeo */}
+          {/* CTA — aparece quando faltam 14s no vídeo */}
           {showCTA && (
             <div
               ref={ctaRef}
