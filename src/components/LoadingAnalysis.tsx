@@ -34,7 +34,7 @@ export function LoadingAnalysis({
     const startTime = Date.now();
     let videoReady = !videoUrl; // se não há URL, já está "pronto"
 
-    // Baixa o vídeo completamente via fetch para popular o cache do browser
+    // Baixa o vídeo completamente e cria blob URL para reprodução instantânea
     const controller = new AbortController();
     if (videoUrl) {
       fetch(videoUrl, { signal: controller.signal })
@@ -42,7 +42,10 @@ export function LoadingAnalysis({
           if (!res.ok) throw new Error("fetch failed");
           return res.blob();
         })
-        .then(() => {
+        .then((blob) => {
+          // Armazena blob URL globalmente para o ResultScreen usar
+          (window as any).__preloadedVideoBlob = URL.createObjectURL(blob);
+          (window as any).__preloadedVideoUrl = videoUrl;
           videoReady = true;
           tryComplete();
         })
@@ -162,7 +165,7 @@ export function LoadingAnalysis({
             </div>
           </div>
           <p className="text-center text-sm text-muted-foreground">
-            {progress}%
+            {Math.round(progress)}%
           </p>
         </div>
 

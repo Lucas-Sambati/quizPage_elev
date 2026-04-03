@@ -149,6 +149,12 @@ export function ResultScreen() {
   const content = PROFILE_CONTENT[profileType];
   const videoUrl = getVideoUrl(profileType);
 
+  // Usa blob URL pré-carregado (se existir) para reprodução instantânea
+  const cachedBlobUrl = (window as any).__preloadedVideoBlob;
+  const cachedVideoUrl = (window as any).__preloadedVideoUrl;
+  const effectiveVideoUrl =
+    cachedBlobUrl && cachedVideoUrl === videoUrl ? cachedBlobUrl : videoUrl;
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -168,12 +174,13 @@ export function ResultScreen() {
       // Scroll para baixo somente no primeiro play
       if (!hasScrolledOnPlay.current) {
         hasScrolledOnPlay.current = true;
-        setTimeout(() => {
-          window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: "smooth",
-          });
-        }, 100);
+        requestAnimationFrame(() => {
+          const maxScroll = Math.max(
+            document.body.scrollHeight,
+            document.documentElement.scrollHeight,
+          );
+          window.scrollTo({ top: maxScroll, behavior: "smooth" });
+        });
       }
     } else {
       video.pause();
@@ -236,7 +243,7 @@ export function ResultScreen() {
           >
             <video
               ref={videoRef}
-              src={videoUrl}
+              src={effectiveVideoUrl}
               className="absolute inset-0 w-full h-full object-cover"
               playsInline
               preload="auto"
