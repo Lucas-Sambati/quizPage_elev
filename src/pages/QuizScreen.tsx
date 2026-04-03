@@ -244,7 +244,8 @@ export function QuizScreen() {
     analytics.trackQuizStep(step, answer);
 
     // Prefetch: na penúltima pergunta já sabemos o perfil (finalObjective não altera o resultado).
-    // Projetamos as respostas incluindo a atual e determinamos o vídeo para começar o download.
+    // Projetamos as respostas incluindo a atual e criamos um <video> oculto para
+    // iniciar o download sem problemas de CORS (media elements não exigem CORS).
     const isPenultimate = step === maxSteps - 1;
     if (isPenultimate && !prefetchedRef.current) {
       prefetchedRef.current = true;
@@ -252,12 +253,18 @@ export function QuizScreen() {
         const projected = { ...answers, [currentQuiz.key]: answer };
         const profile = getProfile(projected);
         const videoUrl = getVideoUrl(profile);
-        const link = document.createElement("link");
-        link.rel = "preload";
-        link.as = "video";
-        link.href = videoUrl;
-        link.type = "video/mp4";
-        document.head.appendChild(link);
+        const vid = document.createElement("video");
+        vid.preload = "auto";
+        vid.src = videoUrl;
+        vid.muted = true;
+        vid.style.display = "none";
+        document.body.appendChild(vid);
+        // Remove o elemento oculto após carregar o suficiente (ou falhar)
+        const cleanup = () => {
+          vid.remove();
+        };
+        vid.addEventListener("canplaythrough", cleanup, { once: true });
+        vid.addEventListener("error", cleanup, { once: true });
       } catch {
         // silently ignore — prefetch is best-effort
       }

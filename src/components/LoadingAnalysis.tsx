@@ -34,26 +34,22 @@ export function LoadingAnalysis({
     const startTime = Date.now();
     let videoReady = !videoUrl; // se não há URL, já está "pronto"
 
-    // Baixa o vídeo completamente e cria blob URL para reprodução instantânea
-    const controller = new AbortController();
+    // Pré-carrega o vídeo via <video> oculto (media elements não exigem CORS)
+    let preloadVideo: HTMLVideoElement | null = null;
     if (videoUrl) {
-      fetch(videoUrl, { signal: controller.signal })
-        .then((res) => {
-          if (!res.ok) throw new Error("fetch failed");
-          return res.blob();
-        })
-        .then((blob) => {
-          // Armazena blob URL globalmente para o ResultScreen usar
-          (window as any).__preloadedVideoBlob = URL.createObjectURL(blob);
-          (window as any).__preloadedVideoUrl = videoUrl;
-          videoReady = true;
-          tryComplete();
-        })
-        .catch(() => {
-          // Em caso de erro (rede, abort), não bloqueia
-          videoReady = true;
-          tryComplete();
-        });
+      preloadVideo = document.createElement("video");
+      preloadVideo.preload = "auto";
+      preloadVideo.src = videoUrl;
+      preloadVideo.muted = true;
+      preloadVideo.style.display = "none";
+      document.body.appendChild(preloadVideo);
+
+      const onReady = () => {
+        videoReady = true;
+        tryComplete();
+      };
+      preloadVideo.addEventListener("canplaythrough", onReady, { once: true });
+      preloadVideo.addEventListener("error", onReady, { once: true });
     }
 
     // Timeout máximo — nunca bloquear o usuário por muito tempo
@@ -99,7 +95,7 @@ export function LoadingAnalysis({
     }, 600);
 
     return () => {
-      controller.abort();
+      if (preloadVideo) preloadVideo.remove();
       clearTimeout(maxTimer);
       clearTimeout(minTimer);
       clearInterval(progressInterval);

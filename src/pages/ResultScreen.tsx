@@ -34,6 +34,7 @@ type ProfileType =
 
 interface ProfileContent {
   profileTitle: string;
+  profileName: string;
 }
 
 /**
@@ -88,17 +89,61 @@ const BASE_CONTENT = {};
  * Conteúdo personalizado para cada perfil
  */
 const PROFILE_CONTENT: Record<ProfileType, ProfileContent> = {
-  OCUPADO: { ...BASE_CONTENT, profileTitle: "PERFIL OCUPADO" },
-  DESALINHADO: { ...BASE_CONTENT, profileTitle: "PERFIL DESALINHADO" },
-  OBSTINADO: { ...BASE_CONTENT, profileTitle: "PERFIL OBSTINADO" },
-  PROGRESSIVO: { ...BASE_CONTENT, profileTitle: "PERFIL PROGRESSIVO" },
-  REATIVO: { ...BASE_CONTENT, profileTitle: "PERFIL REATIVO" },
-  SEM_DIRECAO: { ...BASE_CONTENT, profileTitle: "PERFIL SEM DIREÇÃO" },
-  BLOQUEADO: { ...BASE_CONTENT, profileTitle: "PERFIL BLOQUEADO" },
-  ENERGICO: { ...BASE_CONTENT, profileTitle: "PERFIL ENÉRGICO" },
-  EXIGENTE: { ...BASE_CONTENT, profileTitle: "PERFIL EXIGENTE" },
-  MALEAVAL: { ...BASE_CONTENT, profileTitle: "PERFIL MALEÁVEL" },
-  LONGEVIDADE: { ...BASE_CONTENT, profileTitle: "PERFIL LONGEVIDADE" },
+  OCUPADO: {
+    ...BASE_CONTENT,
+    profileTitle: "PERFIL OCUPADO",
+    profileName: "OCUPADO",
+  },
+  DESALINHADO: {
+    ...BASE_CONTENT,
+    profileTitle: "PERFIL DESALINHADO",
+    profileName: "DESALINHADO",
+  },
+  OBSTINADO: {
+    ...BASE_CONTENT,
+    profileTitle: "PERFIL OBSTINADO",
+    profileName: "OBSTINADO",
+  },
+  PROGRESSIVO: {
+    ...BASE_CONTENT,
+    profileTitle: "PERFIL PROGRESSIVO",
+    profileName: "PROGRESSIVO",
+  },
+  REATIVO: {
+    ...BASE_CONTENT,
+    profileTitle: "PERFIL REATIVO",
+    profileName: "REATIVO",
+  },
+  SEM_DIRECAO: {
+    ...BASE_CONTENT,
+    profileTitle: "PERFIL SEM DIREÇÃO",
+    profileName: "SEM DIREÇÃO",
+  },
+  BLOQUEADO: {
+    ...BASE_CONTENT,
+    profileTitle: "PERFIL BLOQUEADO",
+    profileName: "BLOQUEADO",
+  },
+  ENERGICO: {
+    ...BASE_CONTENT,
+    profileTitle: "PERFIL ENÉRGICO",
+    profileName: "ENÉRGICO",
+  },
+  EXIGENTE: {
+    ...BASE_CONTENT,
+    profileTitle: "PERFIL EXIGENTE",
+    profileName: "EXIGENTE",
+  },
+  MALEAVAL: {
+    ...BASE_CONTENT,
+    profileTitle: "PERFIL MALEÁVEL",
+    profileName: "MALEÁVEL",
+  },
+  LONGEVIDADE: {
+    ...BASE_CONTENT,
+    profileTitle: "PERFIL LONGEVIDADE",
+    profileName: "LONGEVIDADE",
+  },
 };
 
 /**
@@ -149,15 +194,8 @@ export function ResultScreen() {
   const content = PROFILE_CONTENT[profileType];
   const videoUrl = getVideoUrl(profileType);
 
-  // Usa blob URL pré-carregado (se existir) para reprodução instantânea
-  const cachedBlobUrl = (window as any).__preloadedVideoBlob;
-  const cachedVideoUrl = (window as any).__preloadedVideoUrl;
-  const hasCachedBlob = !!(cachedBlobUrl && cachedVideoUrl === videoUrl);
-  const effectiveVideoUrl = hasCachedBlob ? cachedBlobUrl : videoUrl;
-
   const videoRef = useRef<HTMLVideoElement>(null);
-  // Se temos blob URL, o vídeo já está na memória — pular estado de loading
-  const [videoLoaded, setVideoLoaded] = useState(hasCachedBlob);
+  const [videoLoaded, setVideoLoaded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffering, setIsBuffering] = useState(false);
   const [realProgress, setRealProgress] = useState(0);
@@ -229,26 +267,21 @@ export function ResultScreen() {
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.08),transparent_60%)] pointer-events-none" />
 
       <div className="relative flex-1 flex flex-col justify-between py-8 md:py-12">
-        {/* Topo com badge de credibilidade */}
-        <div className="flex justify-center mb-4">
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium border border-primary/20">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span>Diagnóstico completo</span>
-          </div>
-        </div>
-
         {/* Conteúdo central */}
         <div className="flex-1 flex flex-col justify-center space-y-5 md:space-y-7 text-center px-4 max-w-2xl mx-auto w-full">
           {/* Título do perfil */}
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary uppercase tracking-wide animate-fade-in-up">
-            {content.profileTitle}
-          </h2>
+          <div className="animate-fade-in-up space-y-3">
+            <p className="text-sm md:text-base font-medium text-muted-foreground uppercase tracking-[0.2em]">
+              Seu diagnóstico
+            </p>
+            <div className="flex items-center justify-center gap-3">
+              <span className="h-px flex-1 max-w-[60px] bg-gradient-to-r from-transparent to-primary/40" />
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold uppercase tracking-[0.15em] bg-gradient-to-r from-primary via-violet-400 to-primary bg-clip-text text-transparent drop-shadow-sm">
+                {content.profileName}
+              </h2>
+              <span className="h-px flex-1 max-w-[60px] bg-gradient-to-l from-transparent to-primary/40" />
+            </div>
+          </div>
 
           {/* VSL do perfil (9:16) — Player customizado */}
           <div
@@ -257,7 +290,7 @@ export function ResultScreen() {
           >
             <video
               ref={videoRef}
-              src={effectiveVideoUrl}
+              src={videoUrl}
               className="absolute inset-0 w-full h-full object-cover"
               playsInline
               preload="auto"

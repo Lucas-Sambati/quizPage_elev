@@ -3,7 +3,7 @@ import { ScreenContainer } from "@/components/ui/ScreenContainer";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { analytics } from "@/lib/analytics";
 import { useEffect } from "react";
-import { Rocket, Clock, ShieldCheck, Check } from "lucide-react";
+import { Clock, ShieldCheck, Check } from "lucide-react";
 
 /**
  * TELA 1 - ENTRADA / HOOK
@@ -96,7 +96,6 @@ export function WelcomeScreen() {
             onClick={handleStart}
             className="w-full max-w-md"
           >
-            <Rocket className="w-5 h-5 mr-2" />
             Começar diagnóstico gratuito
           </CTAButton>
 
