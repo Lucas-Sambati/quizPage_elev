@@ -243,7 +243,7 @@ export function ResultScreen() {
     const video = videoRef.current;
     if (!video || !video.duration) return;
     setRealProgress(video.currentTime / video.duration);
-    if (video.duration - video.currentTime <= 14) {
+    if (video.duration - video.currentTime <= 21) {
       setShowCTA(true);
     }
   }, []);
@@ -376,7 +376,7 @@ export function ResultScreen() {
             )}
           </div>
 
-          {/* CTA — aparece quando faltam 14s no vídeo */}
+          {/* CTA — aparece quando faltam 21s no vídeo */}
           {showCTA && (
             <div
               ref={ctaRef}
