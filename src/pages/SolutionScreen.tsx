@@ -168,18 +168,16 @@ export function SolutionScreen() {
 
       <div className="space-y-10 pb-8">
         {/* HEADER */}
-        <div className="text-center space-y-4 pt-2">
-          <div className="flex justify-center">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium border border-primary/20">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <span>Escolha sua evolução</span>
-            </div>
+        <div className="text-center space-y-3 pt-2">
+          <p className="text-sm md:text-base font-medium text-muted-foreground uppercase tracking-[0.2em]">
+            Próximo passo
+          </p>
+          <div className="flex items-center justify-center gap-3">
+            <span className="h-px flex-1 max-w-[60px] bg-gradient-to-r from-transparent to-primary/40" />
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold uppercase tracking-[0.1em] bg-gradient-to-r from-primary via-violet-400 to-primary bg-clip-text text-transparent">
+              Escolha sua evolução
+            </h1>
+            <span className="h-px flex-1 max-w-[60px] bg-gradient-to-l from-transparent to-primary/40" />
           </div>
         </div>
 
@@ -326,9 +324,13 @@ export function SolutionScreen() {
 
         {/* SOCIAL PROOF */}
         <div className="space-y-4">
-          <h2 className="text-2xl font-bold text-foreground text-center">
-            Eles já estiveram no seu lugar
-          </h2>
+          <div className="flex items-center justify-center gap-3">
+            <span className="h-px flex-1 max-w-[40px] bg-gradient-to-r from-transparent to-primary/30" />
+            <h2 className="text-xl md:text-2xl font-bold text-foreground">
+              Eles já estiveram no seu lugar
+            </h2>
+            <span className="h-px flex-1 max-w-[40px] bg-gradient-to-l from-transparent to-primary/30" />
+          </div>
           <div className="grid grid-cols-2 gap-3">
             {[
               { name: "Diego", src: "/img/Diego.webp" },
@@ -358,9 +360,13 @@ export function SolutionScreen() {
 
         {/* FAQ */}
         <div className="space-y-4">
-          <h2 className="text-2xl font-bold text-foreground text-center">
-            Perguntas frequentes
-          </h2>
+          <div className="flex items-center justify-center gap-3">
+            <span className="h-px flex-1 max-w-[40px] bg-gradient-to-r from-transparent to-primary/30" />
+            <h2 className="text-xl md:text-2xl font-bold text-foreground">
+              Perguntas frequentes
+            </h2>
+            <span className="h-px flex-1 max-w-[40px] bg-gradient-to-l from-transparent to-primary/30" />
+          </div>
           <div className="space-y-2">
             {FAQS.map((faq, index) => (
               <div
