@@ -16,12 +16,6 @@ function easeProgress(real: number): number {
   return Math.pow(Math.min(Math.max(real, 0), 1), 0.45);
 }
 
-function formatTime(seconds: number): string {
-  const m = Math.floor(seconds / 60);
-  const s = Math.floor(seconds % 60);
-  return `${m}:${s.toString().padStart(2, "0")}`;
-}
-
 /**
  * Tipos de perfil baseados nas respostas
  */
@@ -160,10 +154,10 @@ export function ResultScreen() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffering, setIsBuffering] = useState(false);
   const [realProgress, setRealProgress] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
   const [hasEnded, setHasEnded] = useState(false);
   const [showCTA, setShowCTA] = useState(false);
+  const ctaRef = useRef<HTMLDivElement>(null);
+  const hasScrolledToCTA = useRef(false);
 
   const togglePlay = useCallback(() => {
     const video = videoRef.current;
@@ -178,12 +172,18 @@ export function ResultScreen() {
   const handleTimeUpdate = useCallback(() => {
     const video = videoRef.current;
     if (!video || !video.duration) return;
-    setCurrentTime(video.currentTime);
     setRealProgress(video.currentTime / video.duration);
     if (video.duration - video.currentTime <= 15) {
       setShowCTA(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (showCTA && !hasScrolledToCTA.current && ctaRef.current) {
+      hasScrolledToCTA.current = true;
+      ctaRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }, [showCTA]);
 
   const handleContinue = () => {
     analytics.trackCTAClick("result_screen");
@@ -231,7 +231,6 @@ export function ResultScreen() {
               preload="auto"
               onLoadedData={() => {
                 setVideoLoaded(true);
-                if (videoRef.current) setDuration(videoRef.current.duration);
               }}
               onTimeUpdate={handleTimeUpdate}
               onPlay={() => {
@@ -284,15 +283,6 @@ export function ResultScreen() {
             {/* Barra de progresso customizada (bottom) */}
             {videoLoaded && (
               <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
-                {/* Tempo decorrido */}
-                <div className="flex justify-between items-center px-3 pb-1">
-                  <span className="text-[11px] font-mono text-white/70 drop-shadow">
-                    {formatTime(currentTime)}
-                  </span>
-                  <span className="text-[11px] font-mono text-white/70 drop-shadow">
-                    {formatTime(duration)}
-                  </span>
-                </div>
                 {/* Trilho da barra */}
                 <div className="h-1 bg-white/20">
                   <div
@@ -324,12 +314,15 @@ export function ResultScreen() {
 
           {/* CTA — aparece quando faltam 15s no vídeo */}
           {showCTA && (
-            <div className="flex flex-col items-center space-y-2 md:space-y-3 pt-2 md:pt-4 pb-4 animate-fade-in-up">
+            <div
+              ref={ctaRef}
+              className="flex flex-col items-center space-y-2 md:space-y-3 pt-2 md:pt-4 pb-4 animate-fade-in-up"
+            >
               <CTAButton size="lg" onClick={handleContinue} className="w-full">
-                Quero meu plano personalizado
+                Começar Agora
               </CTAButton>
               <p className="text-xs text-muted-foreground">
-                Próxima etapa: o que fazer a partir de agora
+                Próxima etapa: escolher seu nível de evolução
               </p>
             </div>
           )}

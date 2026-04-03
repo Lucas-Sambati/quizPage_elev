@@ -1,436 +1,404 @@
-import { useLocation } from "wouter";
+﻿import { useLocation } from "wouter";
 import { ScreenContainer } from "@/components/ui/ScreenContainer";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { analytics } from "@/lib/analytics";
 import { useEffect, useState } from "react";
-import { CheckCircle2, HelpCircle } from "lucide-react";
-import { useQuiz, QuizAnswers } from "@/hooks/useQuiz";
+import {
+  CheckCircle2,
+  Star,
+  Crown,
+  Zap,
+  ChevronDown,
+  Lock,
+  Shield,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 /**
- * ⚠️ CONFIGURAÇÃO IMPORTANTE
- * Substitua pela URL real do seu checkout Kiwify
+ * CONFIGURACAO IMPORTANTE
+ * Substitua pelas URLs reais do checkout Kiwify por plano
  */
-const CHECKOUT_URL = "https://pay.kiwify.com.br/fUcu9RX";
-
-/**
- * Tipos de perfil baseados nas respostas
- */
-type ProfileType =
-  | "OCUPADO"
-  | "DESALINHADO"
-  | "OBSTINADO"
-  | "PROGRESSIVO"
-  | "REATIVO"
-  | "SEM_DIRECAO"
-  | "BLOQUEADO"
-  | "ENERGICO"
-  | "EXIGENTE"
-  | "MALEAVAL"
-  | "LONGEVIDADE";
-
-/**
- * Determina o perfil baseado no caminho percorrido no quiz
- */
-function getProfile(answers: QuizAnswers): ProfileType {
-  const {
-    gymFrequency,
-    lowFreqReason,
-    gymDuration,
-    motivationFactor,
-    currentGoal,
-    stagnationReason,
-    changeDesire,
-  } = answers;
-
-  if (gymFrequency === "2 ou menos") {
-    if (lowFreqReason === "Falta de tempo") {
-      if (gymDuration === "Menos de uma hora") return "OCUPADO";
-      return "DESALINHADO";
-    }
-    if (lowFreqReason === "Pouca motivação") {
-      if (motivationFactor === "Competição") return "OBSTINADO";
-      if (motivationFactor === "Perceber evoluções no seu físico")
-        return "PROGRESSIVO";
-      return "REATIVO";
-    }
-    return "SEM_DIRECAO";
-  }
-
-  if (currentGoal === "Me sinto estagnado e quero voltar a evoluir") {
-    if (stagnationReason === "Minha rotina não se encaixa mais no meu objetivo")
-      return "DESALINHADO";
-    return "BLOQUEADO";
-  }
-  if (currentGoal === "Quero uma mudança no planejamento dos treinos") {
-    if (changeDesire === "Quero um treino mais dinâmico") return "ENERGICO";
-    if (changeDesire === "Quero um acompanhamento individual e personalizado")
-      return "EXIGENTE";
-    return "MALEAVAL";
-  }
-  return "LONGEVIDADE";
-}
-
-/**
- * Conteúdo personalizado para cada perfil
- */
-interface ProfileSolutionContent {
-  targetAudience: string;
-  profileName: string;
-}
-
-const PROFILE_SOLUTION: Record<ProfileType, ProfileSolutionContent> = {
-  OCUPADO: {
-    targetAudience:
-      "Esse plano é para quem se identificou com o perfil Ocupado.",
-    profileName: "Ocupado",
-  },
-  DESALINHADO: {
-    targetAudience:
-      "Esse plano é para quem se identificou com o perfil Desalinhado.",
-    profileName: "Desalinhado",
-  },
-  OBSTINADO: {
-    targetAudience:
-      "Esse plano é para quem se identificou com o perfil Obstinado.",
-    profileName: "Obstinado",
-  },
-  PROGRESSIVO: {
-    targetAudience:
-      "Esse plano é para quem se identificou com o perfil Progressivo.",
-    profileName: "Progressivo",
-  },
-  REATIVO: {
-    targetAudience:
-      "Esse plano é para quem se identificou com o perfil Reativo.",
-    profileName: "Reativo",
-  },
-  SEM_DIRECAO: {
-    targetAudience:
-      "Esse plano é para quem se identificou com o perfil Sem Direção.",
-    profileName: "Sem Direção",
-  },
-  BLOQUEADO: {
-    targetAudience:
-      "Esse plano é para quem se identificou com o perfil Bloqueado.",
-    profileName: "Bloqueado",
-  },
-  ENERGICO: {
-    targetAudience:
-      "Esse plano é para quem se identificou com o perfil Enérgico.",
-    profileName: "Enérgico",
-  },
-  EXIGENTE: {
-    targetAudience:
-      "Esse plano é para quem se identificou com o perfil Exigente.",
-    profileName: "Exigente",
-  },
-  MALEAVAL: {
-    targetAudience:
-      "Esse plano é para quem se identificou com o perfil Maleável.",
-    profileName: "Maleável",
-  },
-  LONGEVIDADE: {
-    targetAudience:
-      "Esse plano é para quem se identificou com o perfil Longevidade.",
-    profileName: "Longevidade",
-  },
+const CHECKOUT_URLS = {
+  start:
+    "https://pay.kirvano.com/998314eb-56e1-4934-a7c9-d9357756aaa0?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=",
+  progress:
+    "https://pay.kirvano.com/769cadb9-3e6d-404a-84dd-a96769d3e613?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=",
+  elite:
+    "https://pay.kirvano.com/9028b67a-f369-4cfb-a866-df8936a1e029?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=",
 };
 
+type PlanId = "start" | "progress" | "elite";
+
+interface Plan {
+  id: PlanId;
+  name: string;
+  tagline: string;
+  price: string;
+  popular: boolean;
+  launchAlert: boolean;
+  features: string[];
+  cta: string;
+}
+
+const PLANS: Plan[] = [
+  {
+    id: "start",
+    name: "ELEV Start",
+    tagline: "Para começar com o pé direito.",
+    price: "19,90",
+    popular: false,
+    launchAlert: false,
+    features: [
+      "Controle completo de treinos",
+      "1 consultoria IA por semana",
+      "Gamificação & Ranking",
+      "Comunidade",
+    ],
+    cta: "Começar com o Start",
+  },
+  {
+    id: "progress",
+    name: "ELEV Progress",
+    tagline: "Para quem quer resultado de verdade.",
+    price: "24,90",
+    popular: true,
+    launchAlert: true,
+    features: [
+      "Tudo do Start",
+      "3 consultorias IA completas/semana",
+      "Plano de treino personalizado",
+      "Plano alimentar estratégico",
+      "Leitura inteligente da sua evolução",
+      "Análise com foto do físico",
+      "Envio de preferências e objetivos",
+      "Mapa muscular e métricas",
+    ],
+    cta: "Quero o Progress",
+  },
+  {
+    id: "elite",
+    name: "ELEV Elite",
+    tagline: "Para quem não aceita menos que o máximo.",
+    price: "32,90",
+    popular: false,
+    launchAlert: false,
+    features: [
+      "Tudo do Progress",
+      "5 consultorias IA completas/semana",
+      "Conteúdo exclusivo Elite",
+      "Badge Elite no ranking",
+      "Suporte prioritário",
+    ],
+    cta: "Quero o Elite",
+  },
+];
+
+const PLAN_ICONS: Record<PlanId, React.ElementType> = {
+  start: Zap,
+  progress: Star,
+  elite: Crown,
+};
+
+interface FaqItem {
+  q: string;
+  a: string;
+}
+
+const FAQS: FaqItem[] = [
+  {
+    q: "E se eu não tiver tempo?",
+    a: "O ELEV não pede 2 horas do seu dia. Registrar um treino leva segundos. A consultoria de IA entrega tudo pronto — treino e dieta — sem que você precise pesquisar nada. Quem não tem tempo é quem mais precisa de um sistema que organiza tudo por você.",
+  },
+  {
+    q: "Será que funciona pra quem já tentou de tudo?",
+    a: "Principalmente pra quem já tentou de tudo. Se você já usou apps, planilhas e personal e nada durou, o problema nunca foi você — foi a abordagem fragmentada. O ELEV é o primeiro sistema que integra tudo: treino, dieta, acompanhamento e motivação. É diferente porque resolve o problema inteiro, não só um pedaço.",
+  },
+  {
+    q: "A IA realmente monta um plano alimentar personalizado?",
+    a: "Sim. A cada consultoria, a IA analisa suas métricas, treinos recentes, objetivo e até foto do físico (opcional) para montar um plano alimentar semanal sob medida. Não é um template genérico — é um plano que evolui junto com o seu progresso. Para condições médicas específicas, sempre recomendamos acompanhamento profissional.",
+  },
+  {
+    q: "Nunca treinei. O ELEV funciona pra mim?",
+    a: "Foi pensado especialmente pra você. O ELEV tem vídeos de execução para cada exercício, explicações sobre cada grupo muscular e a IA adapta todas as recomendações ao seu nível atual. Você começa no seu ritmo e o sistema cresce junto com a sua evolução.",
+  },
+  {
+    q: "Como funciona a gamificação e o ranking?",
+    a: "Cada treino registrado, consultoria feita e meta batida gera XP. Conforme acumula XP, você sobe de nível e escala no ranking da comunidade. É a motivação que faltava para manter a consistência — porque resultado vem de constância, e constância vem de hábito.",
+  },
+  {
+    q: "Qual a diferença entre os planos?",
+    a: "Cada plano evolui sobre o anterior. O Start traz 1 consultoria semanal, controle de treinos e ranking. O Progress adiciona 3 consultorias, envio de foto do físico e IA mais profunda. O Elite libera uso intensivo, conteúdos avançados exclusivos, badge no ranking e acesso antecipado a novidades. Se está em dúvida, o Progress é o equilíbrio perfeito entre custo e resultado.",
+  },
+  {
+    q: "Posso cancelar a qualquer momento?",
+    a: "Sim, sem letras miúdas e sem burocracia. Você cancela quando quiser direto pelo app, sem precisar ligar pra ninguém. Mas sendo sincero: quem começa a ver os resultados no dashboard não quer mais parar.",
+  },
+  {
+    q: "O que torna o ELEV diferente de outros apps de treino?",
+    a: "A maioria dos apps só controla séries e repetições. O ELEV integra controle de treino + consultoria alimentar com IA + gamificação + comunidade em uma única experiência. É como ter um personal, um nutricionista e uma comunidade motivadora no seu bolso — por uma fração do custo.",
+  },
+  {
+    q: "Vale mais do que uma mensalidade de academia?",
+    a: "Academia te dá espaço para treinar. O ELEV te diz o que fazer, quanto comer e por que você estava estagnado. Treino personalizado, plano alimentar e análise inteligente de IA — por um valor igual ou menor ao de muitas academias. A diferença é: academia é uma estrutura. O ELEV é um sistema.",
+  },
+];
+
 /**
- * TELA 4 - SOLUÇÃO + CTA
- *
- * Apresenta a solução (produto)
- * Lista o que está incluído
- * Mostra preço e CTA final para checkout
+ * TELA 4 - PLANOS + FAQ + CTA
  */
 export function SolutionScreen() {
   const [, setLocation] = useLocation();
-  const { answers } = useQuiz();
-  const [sheetImageSrc, setSheetImageSrc] = useState(
-    `${import.meta.env.BASE_URL}planilha.jpg`,
-  );
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   useEffect(() => {
     analytics.trackPageView("solution");
-    // Scroll para o topo ao entrar na página
     window.scrollTo(0, 0);
   }, []);
 
-  const profileType = getProfile(answers);
-  const profileContent = PROFILE_SOLUTION[profileType];
-
-  const handleCheckout = () => {
+  const handleCheckout = (plan: PlanId) => {
     analytics.trackCheckout();
-    analytics.trackCTAClick("solution_screen_checkout");
-
-    // Redireciona para checkout Kiwify
-    window.location.href = CHECKOUT_URL;
+    analytics.trackCTAClick(`solution_screen_checkout_${plan}`);
+    window.location.href = CHECKOUT_URLS[plan];
   };
 
   return (
-    <ScreenContainer fullHeight>
-      {/* Background com gradiente */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-primary/3 to-primary/10 pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.08),transparent_60%)] pointer-events-none" />
+    <ScreenContainer>
+      {/* Background gradiente */}
+      <div className="fixed inset-0 bg-gradient-to-b from-primary/5 via-transparent to-primary/10 pointer-events-none -z-10" />
 
-      <div className="relative flex-1 flex flex-col justify-between py-8 md:py-12">
-        {/* Topo com badge de credibilidade */}
-        <div className="flex justify-center mb-4">
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium border border-primary/20">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span>Solução personalizada</span>
+      <div className="space-y-10 pb-8">
+        {/* HEADER */}
+        <div className="text-center space-y-4 pt-2">
+          <div className="flex justify-center">
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium border border-primary/20">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span>Escolha sua evolução</span>
+            </div>
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col justify-center space-y-5 md:space-y-7 px-4 max-w-2xl mx-auto w-full">
-          {/* 1. Para quem é */}
-          <div className="text-center space-y-3">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-              A solução para o seu caso
-            </h1>
-            <div className="bg-primary/5 rounded-lg p-4 md:p-5 border border-primary/20">
-              <p className="text-base md:text-lg text-foreground/90 leading-relaxed">
-                {profileContent.targetAudience}
-              </p>
-            </div>
-          </div>
+        {/* CARDS DE PLANO */}
+        <div className="space-y-8">
+          {PLANS.map((plan) => {
+            const Icon = PLAN_ICONS[plan.id];
+            return (
+              <div
+                key={plan.id}
+                className={cn(
+                  "relative rounded-2xl border-2 bg-muted/40 transition-all duration-200",
+                  plan.popular
+                    ? "border-primary shadow-xl shadow-primary/20 scale-[1.02]"
+                    : "border-border shadow-sm",
+                )}
+              >
+                {/* Badge mais popular */}
+                {plan.popular && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
+                    <div className="bg-primary text-white text-xs font-bold px-4 py-1.5 rounded-full flex items-center gap-1.5 whitespace-nowrap shadow-lg shadow-primary/30">
+                      <Star className="w-3 h-3 fill-white" />
+                      Mais popular
+                    </div>
+                  </div>
+                )}
 
-          {/* 2. O que a pessoa recebe */}
-          <div className="space-y-4">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground text-center">
-              O que você recebe:
-            </h2>
-            <div className="space-y-3 bg-background/80 backdrop-blur-sm rounded-lg p-4 md:p-5 border border-primary/10">
-              {[
-                "Planilha de treino personalizada",
-                "Plano alimentar simples",
-                "Instruções de uso",
-              ].map((item, index) => (
-                <div key={index} className="flex items-start gap-3">
-                  <CheckCircle2 className="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
-                  <span className="text-base md:text-lg text-foreground font-medium">
-                    {item}
+                <div className="p-5 md:p-6">
+                  {/* Nome e descricao */}
+                  <div className="flex items-start gap-3 mb-3">
+                    <div
+                      className={cn(
+                        "w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0",
+                        plan.popular
+                          ? "bg-primary text-white"
+                          : "bg-primary/10 text-primary",
+                      )}
+                    >
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h2
+                        className={cn(
+                          "text-xl font-bold leading-tight",
+                          plan.popular ? "text-primary" : "text-foreground",
+                        )}
+                      >
+                        {plan.name}
+                      </h2>
+                      <p className="text-sm text-muted-foreground mt-0.5">
+                        {plan.tagline}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Alerta de preco de lancamento */}
+                  {plan.launchAlert && (
+                    <div className="mb-4 flex items-center gap-2 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-lg px-3 py-2 text-xs text-amber-700 dark:text-amber-400">
+                      <svg
+                        className="w-3.5 h-3.5 flex-shrink-0"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span>
+                        <strong>Preco de lancamento</strong> &mdash; oferta
+                        limitada
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Preco */}
+                  <div className="flex items-baseline gap-1 mb-4">
+                    <span className="text-sm text-muted-foreground font-medium">
+                      R$
+                    </span>
+                    <span
+                      className={cn(
+                        "text-4xl font-extrabold tracking-tight",
+                        plan.popular ? "text-primary" : "text-foreground",
+                      )}
+                    >
+                      {plan.price}
+                    </span>
+                    <span className="text-sm text-muted-foreground">/mes</span>
+                  </div>
+
+                  <div className="h-px bg-border mb-4" />
+
+                  {/* Features */}
+                  <ul className="space-y-2.5 mb-5">
+                    {plan.features.map((feature, i) => (
+                      <li key={i} className="flex items-start gap-2.5 text-sm">
+                        <CheckCircle2
+                          className={cn(
+                            "w-4 h-4 flex-shrink-0 mt-0.5",
+                            plan.popular ? "text-primary" : "text-primary/70",
+                          )}
+                        />
+                        <span
+                          className={cn(
+                            i === 0 &&
+                              (plan.id === "progress" || plan.id === "elite")
+                              ? "font-semibold text-foreground"
+                              : "text-foreground/80",
+                          )}
+                        >
+                          {feature}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* CTA */}
+                  <CTAButton
+                    size={plan.popular ? "lg" : "default"}
+                    variant={plan.popular ? "primary" : "outline"}
+                    onClick={() => handleCheckout(plan.id)}
+                    className="w-full"
+                  >
+                    {plan.cta}
+                  </CTAButton>
+                  <div className="flex items-center justify-center gap-3 mt-4 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <Lock className="w-3 h-3 text-primary" />
+                      <span>Pagamento seguro</span>
+                    </div>
+                    <span>·</span>
+                    <div className="flex items-center gap-1">
+                      <Shield className="w-3 h-3 text-primary" />
+                      <span>7 dias de garantia</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* SOCIAL PROOF */}
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold text-foreground text-center">
+            Eles já estiveram no seu lugar
+          </h2>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { name: "Diego", src: "/img/Diego.webp" },
+              { name: "Lucas", src: "/img/Lucas.webp" },
+              { name: "Murilo", src: "/img/Murilo.webp" },
+              { name: "Raul", src: "/img/Raul.webp" },
+            ].map((person) => (
+              <div
+                key={person.name}
+                className="relative overflow-hidden rounded-xl border border-border"
+              >
+                <img
+                  src={person.src}
+                  alt={person.name}
+                  className="w-full aspect-[18/16] object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent px-2 py-1.5">
+                  <span className="text-xs font-semibold text-white">
+                    {person.name}
                   </span>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* 3. O que você vai perceber */}
-          <div className="space-y-4">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground text-center">
-              O que você vai perceber usando o plano
-            </h2>
-            <div className="space-y-3 bg-background/80 backdrop-blur-sm rounded-lg p-4 md:p-5 border border-primary/10">
-              <div className="flex items-start gap-3">
-                <CheckCircle2 className="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-base md:text-lg text-foreground font-semibold">
-                    Na primeira semana:
-                  </p>
-                  <p className="text-base md:text-lg text-muted-foreground">
-                    Você entende exatamente o que fazer em cada treino
-                  </p>
-                </div>
               </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle2 className="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-base md:text-lg text-foreground font-semibold">
-                    Em 14 dias:
-                  </p>
-                  <p className="text-base md:text-lg text-muted-foreground">
-                    Sente mais controle sobre alimentação e treino
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle2 className="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-base md:text-lg text-foreground font-semibold">
-                    Em 30 dias:
-                  </p>
-                  <p className="text-base md:text-lg text-muted-foreground">
-                    Começa a ver mudanças reais no corpo e na consistência
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 3.5. Isso não é genérico */}
-          <div className="bg-gradient-to-br from-accent/10 to-accent/5 rounded-lg p-5 md:p-6 border-2 border-accent/20 space-y-2">
-            <h3 className="text-xl md:text-2xl font-bold text-foreground text-center">
-              Isso não é um PDF genérico
-            </h3>
-            <p className="text-base md:text-lg text-foreground/90 text-center leading-relaxed">
-              O plano foi criado para quem se identificou com o perfil{" "}
-              <span className="font-bold text-primary">
-                {profileContent.profileName}
-              </span>
-              , com foco em simplicidade, execução e resultado real.
-            </p>
-          </div>
-
-          {/* 4. Como usar */}
-          <div className="bg-background/80 backdrop-blur-sm rounded-lg p-4 md:p-5 border border-primary/10">
-            <h3 className="text-lg md:text-xl font-bold text-foreground mb-3">
-              Como usar:
-            </h3>
-            <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
-              Você segue o treino, ajusta a alimentação e acompanha a progressão
-              semanal.
-            </p>
-          </div>
-
-          {/* 5. Prova visual */}
-          <div className="space-y-3">
-            <p className="text-sm font-semibold text-center text-muted-foreground">
-              Print da planilha:
-            </p>
-            <div className="relative overflow-hidden rounded-lg border border-primary/15 bg-background">
-              <img
-                src={sheetImageSrc}
-                alt="Print da planilha com progressão automática"
-                className="w-full h-auto block"
-                onError={() => {
-                  if (sheetImageSrc.includes(".jpg"))
-                    setSheetImageSrc(`${import.meta.env.BASE_URL}planilha.jpg`);
-                }}
-              />
-            </div>
-          </div>
-
-          {/* 6. Garantia */}
-          <div className="bg-background/80 backdrop-blur-sm rounded-lg p-4 md:p-5 border border-primary/10 text-center space-y-2">
-            <p className="text-base md:text-lg text-foreground font-semibold">
-              7 dias de garantia incondicional
-            </p>
-            <p className="text-sm md:text-base text-muted-foreground">
-              Se não fizer sentido pra você, é só pedir o reembolso.
-            </p>
-          </div>
-
-          {/* 7. Preço */}
-          <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg p-5 md:p-6 border-2 border-primary/20 text-center space-y-3">
-            <p className="text-muted-foreground text-sm font-medium">
-              Acesso completo por apenas
-            </p>
-            <div className="space-y-1">
-              <div className="text-5xl md:text-6xl font-bold text-primary">
-                R$ 19,90
-              </div>
-              <p className="text-sm text-muted-foreground">
-                pagamento único • sem mensalidades
-              </p>
-            </div>
-          </div>
-
-          {/* 7.5. Micro-FAQ */}
-          <div className="bg-background/80 backdrop-blur-sm rounded-lg p-4 md:p-5 border border-primary/10 space-y-4">
-            <div className="space-y-2">
-              <p className="text-base md:text-lg font-bold text-foreground flex items-start gap-2">
-                <HelpCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span>Isso serve pra iniciantes?</span>
-              </p>
-              <p className="text-sm md:text-base text-muted-foreground pl-7">
-                Sim, o plano é simples e guiado.
-              </p>
-            </div>
-
-            <div className="h-px bg-primary/10" />
-
-            <div className="space-y-2">
-              <p className="text-base md:text-lg font-bold text-foreground flex items-start gap-2">
-                <HelpCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span>Preciso seguir dieta rígida?</span>
-              </p>
-              <p className="text-sm md:text-base text-muted-foreground pl-7">
-                Não. A ideia é adaptação, não radicalismo.
-              </p>
-            </div>
-
-            <div className="h-px bg-primary/10" />
-
-            <div className="space-y-2">
-              <p className="text-base md:text-lg font-bold text-foreground flex items-start gap-2">
-                <HelpCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span>Como recebo o acesso?</span>
-              </p>
-              <p className="text-sm md:text-base text-muted-foreground pl-7">
-                Acesso imediato após o pagamento.
-              </p>
-            </div>
-          </div>
-
-          {/* 8. CTA final */}
-          <div className="space-y-3">
-            <CTAButton
-              size="lg"
-              onClick={handleCheckout}
-              className="w-full shadow-2xl shadow-primary/20 hover:shadow-primary/30"
-            >
-              Quero acessar agora
-            </CTAButton>
-
-            {/* Badges de segurança */}
-            <div className="flex items-center justify-center gap-3 text-xs text-muted-foreground flex-wrap">
-              <div className="flex items-center gap-1">
-                <svg
-                  className="w-3 h-3"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span>Pagamento seguro</span>
-              </div>
-              <span>•</span>
-              <div className="flex items-center gap-1">
-                <svg
-                  className="w-3 h-3"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                </svg>
-                <span>Recebe por e-mail</span>
-              </div>
-              <span>•</span>
-              <div className="flex items-center gap-1">
-                <svg
-                  className="w-3 h-3"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span>Acesso imediato</span>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* Botão voltar na parte inferior */}
-        <div className="text-center mt-6 px-4">
+        {/* FAQ */}
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold text-foreground text-center">
+            Perguntas frequentes
+          </h2>
+          <div className="space-y-2">
+            {FAQS.map((faq, index) => (
+              <div
+                key={index}
+                className="bg-card border border-border rounded-xl overflow-hidden"
+              >
+                <button
+                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                  className="w-full flex items-start justify-between gap-3 p-4 text-left hover:bg-muted/30 transition-colors cursor-pointer"
+                  aria-expanded={openFaq === index}
+                >
+                  <span className="text-sm font-semibold text-foreground leading-snug">
+                    {faq.q}
+                  </span>
+                  <ChevronDown
+                    className={cn(
+                      "w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5 transition-transform duration-200",
+                      openFaq === index && "rotate-180",
+                    )}
+                  />
+                </button>
+                {openFaq === index && (
+                  <div className="px-4 pb-4 border-t border-border/50 pt-3">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {faq.a}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* VOLTAR */}
+        <div className="text-center">
           <button
             onClick={() => setLocation("/resultado")}
-            className="text-sm text-muted-foreground hover:text-foreground underline transition-colors"
+            className="text-sm text-muted-foreground hover:text-foreground underline transition-colors cursor-pointer"
           >
             Voltar
           </button>

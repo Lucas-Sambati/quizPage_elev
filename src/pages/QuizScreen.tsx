@@ -168,7 +168,7 @@ function getQuestionForStep(
         key: "gymDuration",
         options: [
           "Menos de uma hora",
-          "Até uma hora e meia",
+          "Aproximadamente uma hora",
           "Mais de uma hora e meia",
         ],
         icon: "duration",
