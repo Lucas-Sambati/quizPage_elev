@@ -149,7 +149,7 @@ const PROFILE_CONTENT: Record<ProfileType, ProfileContent> = {
 /**
  * URL base do bucket R2 público (Cloudflare)
  */
-const R2_BASE_URL = "vsl.elevhq.com";
+const R2_BASE_URL = "https://vsl.elevhq.com";
 
 /**
  * Mapeamento hardcoded: perfil → nome do arquivo de vídeo no bucket R2.
