@@ -152,11 +152,12 @@ export function ResultScreen() {
   // Usa blob URL pré-carregado (se existir) para reprodução instantânea
   const cachedBlobUrl = (window as any).__preloadedVideoBlob;
   const cachedVideoUrl = (window as any).__preloadedVideoUrl;
-  const effectiveVideoUrl =
-    cachedBlobUrl && cachedVideoUrl === videoUrl ? cachedBlobUrl : videoUrl;
+  const hasCachedBlob = !!(cachedBlobUrl && cachedVideoUrl === videoUrl);
+  const effectiveVideoUrl = hasCachedBlob ? cachedBlobUrl : videoUrl;
 
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoLoaded, setVideoLoaded] = useState(false);
+  // Se temos blob URL, o vídeo já está na memória — pular estado de loading
+  const [videoLoaded, setVideoLoaded] = useState(hasCachedBlob);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffering, setIsBuffering] = useState(false);
   const [realProgress, setRealProgress] = useState(0);
@@ -172,14 +173,27 @@ export function ResultScreen() {
     if (video.paused) {
       video.play().catch(() => {});
       // Scroll para baixo somente no primeiro play
-      if (!hasScrolledOnPlay.current) {
+      if (!hasScrolledOnPlay.current && videoRef.current) {
         hasScrolledOnPlay.current = true;
         requestAnimationFrame(() => {
-          const maxScroll = Math.max(
-            document.body.scrollHeight,
-            document.documentElement.scrollHeight,
-          );
-          window.scrollTo({ top: maxScroll, behavior: "smooth" });
+          // Encontra o container scrollável (ScreenContainer com overflow-y-auto)
+          let el: HTMLElement | null = videoRef.current;
+          while (el) {
+            const style = getComputedStyle(el);
+            if (
+              /(auto|scroll)/.test(style.overflowY) &&
+              el.scrollHeight > el.clientHeight
+            ) {
+              el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+              return;
+            }
+            el = el.parentElement;
+          }
+          // Fallback: window
+          window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: "smooth",
+          });
         });
       }
     } else {
@@ -247,9 +261,8 @@ export function ResultScreen() {
               className="absolute inset-0 w-full h-full object-cover"
               playsInline
               preload="auto"
-              onLoadedData={() => {
-                setVideoLoaded(true);
-              }}
+              onLoadedData={() => setVideoLoaded(true)}
+              onCanPlay={() => setVideoLoaded(true)}
               onTimeUpdate={handleTimeUpdate}
               onPlay={() => {
                 setIsPlaying(true);
