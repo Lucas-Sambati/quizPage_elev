@@ -1,6 +1,5 @@
 ﻿import { useLocation } from "wouter";
 import { ScreenContainer } from "@/components/ui/ScreenContainer";
-import { CTAButton } from "@/components/ui/CTAButton";
 import { analytics } from "@/lib/analytics";
 import { useEffect, useState } from "react";
 import {
