@@ -116,6 +116,27 @@ export function ResultScreen() {
   const ctaRef = useRef<HTMLDivElement>(null);
   const hasScrolledToCTA = useRef(false);
   const hasScrolledOnPlay = useRef(false);
+  const [loadingMsgIndex, setLoadingMsgIndex] = useState(0);
+
+  const LOADING_MESSAGES = [
+    "Cruzando suas respostas com nossa base de perfis...",
+    "Hmm, isso é mais comum do que você imagina...",
+    "Encontramos um padrão importante...",
+    "Seu perfil revela algo que poucos percebem...",
+    "Finalizando sua análise personalizada...",
+  ];
+
+  useEffect(() => {
+    if (videoLoaded) return;
+    const msgInterval = setInterval(() => {
+      setLoadingMsgIndex((prev) =>
+        prev < LOADING_MESSAGES.length - 1 ? prev + 1 : prev,
+      );
+    }, 2200);
+    return () => {
+      clearInterval(msgInterval);
+    };
+  }, [videoLoaded]);
 
   const togglePlay = useCallback(() => {
     const video = videoRef.current;
@@ -232,29 +253,31 @@ export function ResultScreen() {
             )}
 
             {/* Overlay de play/pause — toque em qualquer lugar */}
-            <div
-              className="absolute inset-0 z-10 cursor-pointer"
-              onClick={togglePlay}
-            >
-              {/* Botão play central — visível quando pausado */}
-              {!isPlaying && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-opacity">
-                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/90 flex items-center justify-center shadow-xl shadow-primary/30">
-                    <svg
-                      className="w-8 h-8 md:w-10 md:h-10 text-white ml-1"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      {hasEnded ? (
-                        <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
-                      ) : (
-                        <path d="M8 5v14l11-7z" />
-                      )}
-                    </svg>
+            {videoLoaded && (
+              <div
+                className="absolute inset-0 z-10 cursor-pointer"
+                onClick={togglePlay}
+              >
+                {/* Botão play central — visível quando pausado */}
+                {!isPlaying && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-opacity">
+                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/90 flex items-center justify-center shadow-xl shadow-primary/30">
+                      <svg
+                        className="w-8 h-8 md:w-10 md:h-10 text-white ml-1"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        {hasEnded ? (
+                          <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
+                        ) : (
+                          <path d="M8 5v14l11-7z" />
+                        )}
+                      </svg>
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
 
             {/* Barra de progresso customizada (bottom) */}
             {videoLoaded && (
@@ -269,21 +292,42 @@ export function ResultScreen() {
               </div>
             )}
 
-            {/* Loading placeholder */}
+            {/* Loading persuasivo */}
             {!videoLoaded && (
-              <div className="absolute inset-0 flex items-center justify-center z-10">
-                <div className="flex flex-col items-center gap-3 text-muted-foreground">
-                  <svg
-                    className="w-14 h-14 text-primary/60 animate-pulse"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                  <span className="text-sm font-medium text-foreground/50">
-                    Carregando resultado...
-                  </span>
+              <div className="absolute inset-0 flex flex-col items-center justify-center z-10 bg-black/80 px-6">
+                {/* Ícone animado */}
+                <div className="relative mb-6">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div
+                      className="w-20 h-20 bg-primary/20 rounded-full animate-ping"
+                      style={{ animationDuration: "2s" }}
+                    />
+                  </div>
+                  <div className="relative w-14 h-14 bg-gradient-to-br from-primary to-primary/70 rounded-full flex items-center justify-center shadow-lg shadow-primary/40">
+                    <svg
+                      className="w-7 h-7 text-white animate-spin"
+                      style={{ animationDuration: "3s" }}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                      />
+                    </svg>
+                  </div>
                 </div>
+
+                {/* Mensagem que muda */}
+                <p
+                  key={loadingMsgIndex}
+                  className="text-sm md:text-base text-white/90 text-center font-medium max-w-[260px] leading-relaxed animate-fade-in-up"
+                >
+                  {LOADING_MESSAGES[loadingMsgIndex]}
+                </p>
               </div>
             )}
           </div>
