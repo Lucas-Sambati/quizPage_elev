@@ -4,7 +4,7 @@ import { QuizOption } from "@/components/ui/QuizOption";
 import { ProgressBar } from "@/components/ProgressBar";
 import { LoadingAnalysis } from "@/components/LoadingAnalysis";
 import { useQuiz, QuizAnswers } from "@/hooks/useQuiz";
-import { getProfile, getVideoUrl } from "@/pages/ResultScreen";
+import { getProfile, getVideoUrl } from "@/lib/profile";
 import { analytics } from "@/lib/analytics";
 import { useEffect, useRef, useState } from "react";
 import {

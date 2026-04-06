@@ -154,9 +154,11 @@ export function SolutionScreen() {
     window.scrollTo(0, 0);
   }, []);
 
-  const handleCheckout = (plan: PlanId) => {
+  const handleCheckout = (e: React.MouseEvent, plan: PlanId) => {
+    e.preventDefault();
     analytics.trackCheckout();
     analytics.trackCTAClick(`solution_screen_checkout_${plan}`);
+    window.location.href = CHECKOUT_URLS[plan];
   };
 
   return (
@@ -297,7 +299,7 @@ export function SolutionScreen() {
                   {/* CTA */}
                   <a
                     href={CHECKOUT_URLS[plan.id]}
-                    onClick={() => handleCheckout(plan.id)}
+                    onClick={(e) => handleCheckout(e, plan.id)}
                     className={cn(
                       "inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-200 w-full",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
@@ -351,6 +353,9 @@ export function SolutionScreen() {
                   alt={person.name}
                   className="w-full aspect-[18/16] object-cover"
                   loading="lazy"
+                  decoding="async"
+                  width={300}
+                  height={267}
                 />
                 <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent px-2 py-1.5">
                   <span className="text-xs font-semibold text-white">

@@ -13,4 +13,13 @@ export default defineConfig({
   },
   // Configuração para GitHub Pages com custom domain
   base: process.env.VITE_BASE_PATH || "/",
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom"],
+        },
+      },
+    },
+  },
 });

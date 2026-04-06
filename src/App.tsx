@@ -1,13 +1,20 @@
 import { Route, Switch, Redirect, Router } from "wouter";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { WelcomeScreen } from "@/pages/WelcomeScreen";
-import { QuizScreen } from "@/pages/QuizScreen";
-import { ResultScreen } from "@/pages/ResultScreen";
-import { SolutionScreen } from "@/pages/SolutionScreen";
 import { QuizProvider } from "@/hooks/useQuiz";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import "@/index.css";
+
+const QuizScreen = lazy(() =>
+  import("@/pages/QuizScreen").then((m) => ({ default: m.QuizScreen })),
+);
+const ResultScreen = lazy(() =>
+  import("@/pages/ResultScreen").then((m) => ({ default: m.ResultScreen })),
+);
+const SolutionScreen = lazy(() =>
+  import("@/pages/SolutionScreen").then((m) => ({ default: m.SolutionScreen })),
+);
 
 /**
  * Custom hook for browser location with base path support
@@ -63,24 +70,26 @@ function App() {
       <ThemeProvider defaultTheme="dark">
         <QuizProvider>
           <Router hook={useCustomLocation}>
-            <Switch>
-              {/* Rota inicial - Tela de entrada */}
-              <Route path="/" component={WelcomeScreen} />
+            <Suspense fallback={<div className="min-h-screen bg-background" />}>
+              <Switch>
+                {/* Rota inicial - Tela de entrada */}
+                <Route path="/" component={WelcomeScreen} />
 
-              {/* Quiz - 3 etapas */}
-              <Route path="/quiz/:step" component={QuizScreen} />
+                {/* Quiz - 3 etapas */}
+                <Route path="/quiz/:step" component={QuizScreen} />
 
-              {/* Resultado personalizado */}
-              <Route path="/resultado" component={ResultScreen} />
+                {/* Resultado personalizado */}
+                <Route path="/resultado" component={ResultScreen} />
 
-              {/* Solução + CTA final */}
-              <Route path="/solucao" component={SolutionScreen} />
+                {/* Solução + CTA final */}
+                <Route path="/solucao" component={SolutionScreen} />
 
-              {/* 404 - Redireciona para início */}
-              <Route>
-                <Redirect to="/" />
-              </Route>
-            </Switch>
+                {/* 404 - Redireciona para início */}
+                <Route>
+                  <Redirect to="/" />
+                </Route>
+              </Switch>
+            </Suspense>
           </Router>
         </QuizProvider>
       </ThemeProvider>

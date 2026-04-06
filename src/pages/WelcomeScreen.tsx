@@ -54,6 +54,9 @@ export function WelcomeScreen() {
                 src={`${import.meta.env.BASE_URL}img/elev_logo.webp`}
                 alt="Elev"
                 className="w-full h-full object-contain"
+                fetchPriority="high"
+                width={96}
+                height={96}
               />
             </div>
           </div>

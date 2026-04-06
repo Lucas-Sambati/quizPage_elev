@@ -2,8 +2,9 @@ import { useLocation } from "wouter";
 import { ScreenContainer } from "@/components/ui/ScreenContainer";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { analytics } from "@/lib/analytics";
+import { getProfile, getVideoUrl, type ProfileType } from "@/lib/profile";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useQuiz, QuizAnswers } from "@/hooks/useQuiz";
+import { useQuiz } from "@/hooks/useQuiz";
 
 /**
  * Curva de easing para a barra de progresso da VSL.
@@ -16,68 +17,9 @@ function easeProgress(real: number): number {
   return Math.pow(Math.min(Math.max(real, 0), 1), 0.45);
 }
 
-/**
- * Tipos de perfil baseados nas respostas
- */
-type ProfileType =
-  | "OCUPADO"
-  | "DESALINHADO"
-  | "OBSTINADO"
-  | "PROGRESSIVO"
-  | "REATIVO"
-  | "SEM_DIRECAO"
-  | "BLOQUEADO"
-  | "ENERGICO"
-  | "EXIGENTE"
-  | "MALEAVAL"
-  | "LONGEVIDADE";
-
 interface ProfileContent {
   profileTitle: string;
   profileName: string;
-}
-
-/**
- * Determina o perfil com base no caminho percorrido no quiz
- */
-function getProfile(answers: QuizAnswers): ProfileType {
-  const {
-    gymFrequency,
-    lowFreqReason,
-    gymDuration,
-    motivationFactor,
-    currentGoal,
-    stagnationReason,
-    changeDesire,
-  } = answers;
-
-  if (gymFrequency === "2 ou menos") {
-    if (lowFreqReason === "Falta de tempo") {
-      if (gymDuration === "Menos de uma hora") return "OCUPADO";
-      return "DESALINHADO";
-    }
-    if (lowFreqReason === "Pouca motivação") {
-      if (motivationFactor === "Competição") return "OBSTINADO";
-      if (motivationFactor === "Perceber evoluções no seu físico")
-        return "PROGRESSIVO";
-      return "REATIVO";
-    }
-    return "SEM_DIRECAO";
-  }
-
-  // 3 à 4 vezes ou 5 ou mais
-  if (currentGoal === "Me sinto estagnado e quero voltar a evoluir") {
-    if (stagnationReason === "Minha rotina não se encaixa mais no meu objetivo")
-      return "DESALINHADO";
-    return "BLOQUEADO";
-  }
-  if (currentGoal === "Quero uma mudança no planejamento dos treinos") {
-    if (changeDesire === "Quero um treino mais dinâmico") return "ENERGICO";
-    if (changeDesire === "Quero um acompanhamento individual e personalizado")
-      return "EXIGENTE";
-    return "MALEAVAL";
-  }
-  return "LONGEVIDADE";
 }
 
 /**
@@ -145,36 +87,6 @@ const PROFILE_CONTENT: Record<ProfileType, ProfileContent> = {
     profileName: "LONGEVIDADE",
   },
 };
-
-/**
- * URL base do bucket R2 público (Cloudflare)
- */
-const R2_BASE_URL = "https://vsl.elevhq.com";
-
-/**
- * Mapeamento hardcoded: perfil → nome do arquivo de vídeo no bucket R2.
- * Altere os valores aqui caso os nomes dos objetos mudem.
- */
-const PROFILE_VIDEO_MAP: Record<ProfileType, string> = {
-  OCUPADO: "VSL OCUPADO",
-  DESALINHADO: "VSL DESALINHADO",
-  OBSTINADO: "VSL OBSTINADO",
-  PROGRESSIVO: "VSL PROGRESSIVO",
-  REATIVO: "VSL REATIVO",
-  SEM_DIRECAO: "VSL SEM DIRECAO",
-  BLOQUEADO: "VSL BLOQUEADO",
-  ENERGICO: "VSL ENERGICO",
-  EXIGENTE: "VSL EXIGENTE",
-  MALEAVAL: "VSL MALEAVAL",
-  LONGEVIDADE: "VSL LONGEVIDADE",
-};
-
-export function getVideoUrl(profile: ProfileType): string {
-  const objectKey = PROFILE_VIDEO_MAP[profile];
-  return `${R2_BASE_URL}/${encodeURIComponent(objectKey)}.mp4`;
-}
-
-export { getProfile, type ProfileType };
 
 /**
  * TELA 3 - DIAGNÓSTICO PERSONALIZADO
