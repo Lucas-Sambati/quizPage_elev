@@ -158,7 +158,6 @@ export function SolutionScreen() {
   const handleCheckout = (plan: PlanId) => {
     analytics.trackCheckout();
     analytics.trackCTAClick(`solution_screen_checkout_${plan}`);
-    window.location.href = CHECKOUT_URLS[plan];
   };
 
   return (
@@ -297,14 +296,20 @@ export function SolutionScreen() {
                   </ul>
 
                   {/* CTA */}
-                  <CTAButton
-                    size={plan.popular ? "lg" : "default"}
-                    variant={plan.popular ? "primary" : "outline"}
+                  <a
+                    href={CHECKOUT_URLS[plan.id]}
                     onClick={() => handleCheckout(plan.id)}
-                    className="w-full"
+                    className={cn(
+                      "inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-200 w-full",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                      "active:scale-95",
+                      plan.popular
+                        ? "h-14 px-8 text-lg min-w-[240px] bg-gradient-to-r from-primary to-primary/85 text-white hover:from-primary/90 hover:to-primary/75 animate-cta-glow"
+                        : "h-12 px-6 text-base min-w-[200px] border-2 border-primary text-primary hover:bg-primary hover:text-white",
+                    )}
                   >
                     {plan.cta}
-                  </CTAButton>
+                  </a>
                   <div className="flex items-center justify-center gap-3 mt-4 text-xs text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <Lock className="w-3 h-3 text-primary" />
