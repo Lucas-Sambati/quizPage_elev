@@ -14,6 +14,7 @@ export default defineConfig({
   // Configuração para GitHub Pages com custom domain
   base: process.env.VITE_BASE_PATH || "/",
   build: {
+    target: "es2020",
     rollupOptions: {
       output: {
         manualChunks: {

@@ -23,8 +23,12 @@
       as="image"
       type="image/webp"
     />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
 
-    <!-- Pixel de pageview NO HEAD — dispara o mais cedo possível -->
+    <!-- Scripts de tracking carregados APÓS o app para não bloquear FCP -->
     <script>
       window.pixelId = "69a27d2873a647fcc4e1800d";
       var a = document.createElement("script");
@@ -33,7 +37,7 @@
       a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
       document.head.appendChild(a);
     </script>
-    <script type="text/javascript">
+    <script>
       (function (c, l, a, r, i, t, y) {
         c[a] =
           c[a] ||
@@ -47,12 +51,6 @@
         y.parentNode.insertBefore(t, y);
       })(window, document, "clarity", "script", "vzca8v35mw");
     </script>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-    <!-- Pixel já carregado no <head> para disparar pageview mais cedo -->
-    <!-- UTM tracking -->
     <script
       src="https://cdn.utmify.com.br/scripts/utms/latest.js"
       data-utmify-prevent-xcod-sck
