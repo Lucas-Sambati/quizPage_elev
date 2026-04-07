@@ -14,7 +14,9 @@ for (const file of files) {
 
   // Pula o logo (já é pequeno)
   if (sizeBefore < 50_000) {
-    console.log(`⏭  ${file} — ${(sizeBefore / 1024).toFixed(1)} KB (já pequeno, pulando)`);
+    console.log(
+      `⏭  ${file} — ${(sizeBefore / 1024).toFixed(1)} KB (já pequeno, pulando)`,
+    );
     continue;
   }
 
@@ -35,10 +37,12 @@ for (const file of files) {
   if (sizeAfter < sizeBefore) {
     writeFileSync(filePath, buffer);
     console.log(
-      `✅ ${file} — ${(sizeBefore / 1024).toFixed(1)} KB → ${(sizeAfter / 1024).toFixed(1)} KB (${Math.round((1 - sizeAfter / sizeBefore) * 100)}% menor)`
+      `✅ ${file} — ${(sizeBefore / 1024).toFixed(1)} KB → ${(sizeAfter / 1024).toFixed(1)} KB (${Math.round((1 - sizeAfter / sizeBefore) * 100)}% menor)`,
     );
   } else {
-    console.log(`⏭  ${file} — ${(sizeBefore / 1024).toFixed(1)} KB (já otimizado)`);
+    console.log(
+      `⏭  ${file} — ${(sizeBefore / 1024).toFixed(1)} KB (já otimizado)`,
+    );
   }
 }
 
