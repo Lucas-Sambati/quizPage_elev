@@ -58,7 +58,8 @@ export function LoadingAnalysis({
         preloadVideo.src = videoUrl;
         preloadVideo.muted = true;
         preloadVideo.playsInline = true;
-        preloadVideo.style.cssText = "position:fixed;width:0;height:0;opacity:0;pointer-events:none";
+        preloadVideo.style.cssText =
+          "position:fixed;width:0;height:0;opacity:0;pointer-events:none";
         preloadVideo.setAttribute("data-video-preload", "true");
         document.body.appendChild(preloadVideo);
       }
@@ -109,7 +110,9 @@ export function LoadingAnalysis({
     return () => {
       // Limpa o video oculto de preload — o ResultScreen usará
       // seu próprio <video> e os dados já estarão no cache HTTP.
-      const preloadVid = document.querySelector('video[data-video-preload="true"]');
+      const preloadVid = document.querySelector(
+        'video[data-video-preload="true"]',
+      );
       if (preloadVid) preloadVid.remove();
       clearTimeout(maxTimer);
       clearTimeout(minTimer);

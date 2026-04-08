@@ -260,7 +260,8 @@ export function QuizScreen() {
         vid.src = videoUrl;
         vid.muted = true;
         vid.playsInline = true;
-        vid.style.cssText = "position:fixed;width:0;height:0;opacity:0;pointer-events:none";
+        vid.style.cssText =
+          "position:fixed;width:0;height:0;opacity:0;pointer-events:none";
         vid.setAttribute("data-video-preload", "true");
         document.body.appendChild(vid);
       } catch {
