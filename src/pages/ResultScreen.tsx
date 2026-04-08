@@ -257,7 +257,10 @@ export function ResultScreen() {
             {videoLoaded && (
               <div
                 className="absolute inset-0 z-10 cursor-pointer"
-                onClick={() => { if (!hasStarted) setHasStarted(true); togglePlay(); }}
+                onClick={() => {
+                  if (!hasStarted) setHasStarted(true);
+                  togglePlay();
+                }}
               >
                 {/* Botão play central — visível quando pausado */}
                 {!isPlaying && (
@@ -268,7 +271,9 @@ export function ResultScreen() {
                         Seu diagnóstico está pronto
                       </p>
                     )}
-                    <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/90 flex items-center justify-center shadow-xl shadow-primary/30 ${!hasStarted && !hasEnded ? 'animate-pulse-play' : ''}`}>
+                    <div
+                      className={`w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/90 flex items-center justify-center shadow-xl shadow-primary/30 ${!hasStarted && !hasEnded ? "animate-pulse-play" : ""}`}
+                    >
                       <svg
                         className="w-8 h-8 md:w-10 md:h-10 text-white ml-1"
                         fill="currentColor"
@@ -348,11 +353,23 @@ export function ResultScreen() {
           {/* Prompt abaixo do vídeo — antes do primeiro play */}
           {videoLoaded && !hasStarted && !isPlaying && (
             <div className="flex items-center justify-center gap-2 animate-fade-in-up">
-              <svg className="w-4 h-4 text-primary animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+              <svg
+                className="w-4 h-4 text-primary animate-bounce"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M5 15l7-7 7 7"
+                />
               </svg>
               <p className="text-sm md:text-base text-muted-foreground font-medium">
-                Assista agora — é <span className="text-primary font-bold">personalizado</span> para o seu perfil
+                Assista agora — é{" "}
+                <span className="text-primary font-bold">personalizado</span>{" "}
+                para o seu perfil
               </p>
             </div>
           )}

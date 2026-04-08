@@ -187,7 +187,8 @@
 
   /* Pulse play button — chama atenção para o play */
   @keyframes pulse-play {
-    0%, 100% {
+    0%,
+    100% {
       transform: scale(1);
       box-shadow:
         0 0 0 0 hsl(var(--primary) / 0.5),
