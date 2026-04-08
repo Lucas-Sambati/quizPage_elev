@@ -116,6 +116,7 @@ export function ResultScreen() {
   const ctaRef = useRef<HTMLDivElement>(null);
   const hasScrolledToCTA = useRef(false);
   const hasScrolledOnPlay = useRef(false);
+  const [hasStarted, setHasStarted] = useState(false);
   const [loadingMsgIndex, setLoadingMsgIndex] = useState(0);
 
   const LOADING_MESSAGES = [
@@ -256,12 +257,18 @@ export function ResultScreen() {
             {videoLoaded && (
               <div
                 className="absolute inset-0 z-10 cursor-pointer"
-                onClick={togglePlay}
+                onClick={() => { if (!hasStarted) setHasStarted(true); togglePlay(); }}
               >
                 {/* Botão play central — visível quando pausado */}
                 {!isPlaying && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-opacity">
-                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/90 flex items-center justify-center shadow-xl shadow-primary/30">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 transition-opacity gap-5">
+                    {/* Texto acima do botão — apenas antes do primeiro play */}
+                    {!hasStarted && !hasEnded && (
+                      <p className="text-sm md:text-base text-white/90 font-semibold tracking-wide animate-fade-in-up px-4 text-center">
+                        Seu diagnóstico está pronto
+                      </p>
+                    )}
+                    <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/90 flex items-center justify-center shadow-xl shadow-primary/30 ${!hasStarted && !hasEnded ? 'animate-pulse-play' : ''}`}>
                       <svg
                         className="w-8 h-8 md:w-10 md:h-10 text-white ml-1"
                         fill="currentColor"
@@ -274,6 +281,12 @@ export function ResultScreen() {
                         )}
                       </svg>
                     </div>
+                    {/* Texto abaixo do botão — apenas antes do primeiro play */}
+                    {!hasStarted && !hasEnded && (
+                      <p className="text-xs md:text-sm text-white/70 font-medium animate-fade-in-up px-4 text-center">
+                        Toque no play para ver o que está te travando
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
@@ -331,6 +344,18 @@ export function ResultScreen() {
               </div>
             )}
           </div>
+
+          {/* Prompt abaixo do vídeo — antes do primeiro play */}
+          {videoLoaded && !hasStarted && !isPlaying && (
+            <div className="flex items-center justify-center gap-2 animate-fade-in-up">
+              <svg className="w-4 h-4 text-primary animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+              </svg>
+              <p className="text-sm md:text-base text-muted-foreground font-medium">
+                Assista agora — é <span className="text-primary font-bold">personalizado</span> para o seu perfil
+              </p>
+            </div>
+          )}
 
           {/* CTA — aparece quando faltam 21s no vídeo */}
           {showCTA && (

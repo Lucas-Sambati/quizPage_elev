@@ -184,4 +184,24 @@
     background-size: 200% 200%;
     animation: gradient-shift 8s ease infinite;
   }
+
+  /* Pulse play button — chama atenção para o play */
+  @keyframes pulse-play {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow:
+        0 0 0 0 hsl(var(--primary) / 0.5),
+        0 0 20px hsl(var(--primary) / 0.3);
+    }
+    50% {
+      transform: scale(1.1);
+      box-shadow:
+        0 0 0 16px hsl(var(--primary) / 0),
+        0 0 32px hsl(var(--primary) / 0.4);
+    }
+  }
+
+  .animate-pulse-play {
+    animation: pulse-play 2s ease-in-out infinite;
+  }
 }
