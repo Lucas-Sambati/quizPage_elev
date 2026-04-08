@@ -33,48 +33,7 @@ export function LoadingAnalysis({
   useEffect(() => {
     const startTime = Date.now();
     let videoReady = !videoUrl; // se não há URL, já está "pronto"
-
-    // Garante que exista um <link rel="preload"> para o vídeo.
-    // Se o QuizScreen já injetou, não duplica; caso contrário cria agora.
-    let preloadLink: HTMLLinkElement | null = null;
-    if (videoUrl) {
-      const existing = document.head.querySelector(
-        `link[rel="preload"][href="${CSS.escape(videoUrl)}"]`,
-      ) as HTMLLinkElement | null;
-      if (!existing) {
-        preloadLink = document.createElement("link");
-        preloadLink.rel = "preload";
-        preloadLink.as = "video";
-        preloadLink.href = videoUrl;
-        preloadLink.setAttribute("data-video-preload", "true");
-        document.head.appendChild(preloadLink);
-      }
-
-      // Verifica progresso do preload via fetch com cache hit
-      // para saber quando o vídeo está pronto no cache do browser.
-      fetch(videoUrl, { method: "HEAD" })
-        .then(() => {
-          videoReady = true;
-          tryComplete();
-        })
-        .catch(() => {
-          videoReady = true;
-          tryComplete();
-        });
-    }
-
-    // Timeout máximo — nunca bloquear o usuário por muito tempo
-    const maxTimer = setTimeout(() => {
-      videoReady = true;
-      tryComplete();
-    }, MAX_WAIT_MS);
-
-    // Timer mínimo de exibição
     let minElapsed = false;
-    const minTimer = setTimeout(() => {
-      minElapsed = true;
-      tryComplete();
-    }, MIN_DISPLAY_MS);
 
     function tryComplete() {
       if (completedRef.current) return;
@@ -85,6 +44,48 @@ export function LoadingAnalysis({
         setTimeout(() => onComplete(), 200);
       }
     }
+
+    // Garante que exista um <video> oculto para preload.
+    // Se o QuizScreen já injetou, não duplica; caso contrário cria agora.
+    // Usa <video> em vez de <link rel="preload"> para evitar CORS.
+    if (videoUrl) {
+      let preloadVideo = document.querySelector(
+        'video[data-video-preload="true"]',
+      ) as HTMLVideoElement | null;
+      if (!preloadVideo) {
+        preloadVideo = document.createElement("video");
+        preloadVideo.preload = "auto";
+        preloadVideo.src = videoUrl;
+        preloadVideo.muted = true;
+        preloadVideo.playsInline = true;
+        preloadVideo.style.cssText = "position:fixed;width:0;height:0;opacity:0;pointer-events:none";
+        preloadVideo.setAttribute("data-video-preload", "true");
+        document.body.appendChild(preloadVideo);
+      }
+
+      // Monitora quando o vídeo tem dados suficientes para reprodução
+      const onReady = () => {
+        videoReady = true;
+        tryComplete();
+      };
+      if (preloadVideo.readyState >= 3) {
+        onReady();
+      } else {
+        preloadVideo.addEventListener("canplay", onReady, { once: true });
+      }
+    }
+
+    // Timeout máximo — nunca bloquear o usuário por muito tempo
+    const maxTimer = setTimeout(() => {
+      videoReady = true;
+      tryComplete();
+    }, MAX_WAIT_MS);
+
+    // Timer mínimo de exibição
+    const minTimer = setTimeout(() => {
+      minElapsed = true;
+      tryComplete();
+    }, MIN_DISPLAY_MS);
 
     // Progresso visual animado
     const progressInterval = setInterval(() => {
@@ -106,8 +107,10 @@ export function LoadingAnalysis({
     }, 600);
 
     return () => {
-      // preload links criados aqui são removidos; os do QuizScreen ficam até a navegação.
-      if (preloadLink) preloadLink.remove();
+      // Limpa o video oculto de preload — o ResultScreen usará
+      // seu próprio <video> e os dados já estarão no cache HTTP.
+      const preloadVid = document.querySelector('video[data-video-preload="true"]');
+      if (preloadVid) preloadVid.remove();
       clearTimeout(maxTimer);
       clearTimeout(minTimer);
       clearInterval(progressInterval);

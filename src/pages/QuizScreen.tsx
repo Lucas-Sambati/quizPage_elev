@@ -253,14 +253,16 @@ export function QuizScreen() {
         const projected = { ...answers, [currentQuiz.key]: answer };
         const profile = getProfile(projected);
         const videoUrl = getVideoUrl(profile);
-        // <link rel="preload"> tem prioridade alta na fila de rede do browser
-        // e o cache HTTP é reaproveitado pelo <video> real no ResultScreen.
-        const link = document.createElement("link");
-        link.rel = "preload";
-        link.as = "video";
-        link.href = videoUrl;
-        link.setAttribute("data-video-preload", "true");
-        document.head.appendChild(link);
+        // <video> oculto inicia o download sem CORS
+        // (<link rel="preload" as="video"> dispara CORS em alguns browsers)
+        const vid = document.createElement("video");
+        vid.preload = "auto";
+        vid.src = videoUrl;
+        vid.muted = true;
+        vid.playsInline = true;
+        vid.style.cssText = "position:fixed;width:0;height:0;opacity:0;pointer-events:none";
+        vid.setAttribute("data-video-preload", "true");
+        document.body.appendChild(vid);
       } catch {
         // silently ignore — prefetch is best-effort
       }
