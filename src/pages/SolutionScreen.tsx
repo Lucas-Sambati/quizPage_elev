@@ -15,16 +15,38 @@ import { cn } from "@/lib/utils";
 
 /**
  * CONFIGURACAO IMPORTANTE
- * Substitua pelas URLs reais do checkout Kiwify por plano
+ * URLs base do checkout Kirvano por plano (sem query params)
  */
-const CHECKOUT_URLS = {
-  start:
-    "https://pay.kirvano.com/998314eb-56e1-4934-a7c9-d9357756aaa0?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=",
-  progress:
-    "https://pay.kirvano.com/769cadb9-3e6d-404a-84dd-a96769d3e613?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=",
-  elite:
-    "https://pay.kirvano.com/9028b67a-f369-4cfb-a866-df8936a1e029?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=",
+const CHECKOUT_BASE_URLS: Record<PlanId, string> = {
+  start: "https://pay.kirvano.com/998314eb-56e1-4934-a7c9-d9357756aaa0",
+  progress: "https://pay.kirvano.com/769cadb9-3e6d-404a-84dd-a96769d3e613",
+  elite: "https://pay.kirvano.com/9028b67a-f369-4cfb-a866-df8936a1e029",
 };
+
+const UTM_PARAMS = [
+  "utm_source",
+  "utm_campaign",
+  "utm_medium",
+  "utm_content",
+  "utm_term",
+  "fbclid",
+] as const;
+
+function buildCheckoutUrl(plan: PlanId): string {
+  const base = CHECKOUT_BASE_URLS[plan];
+  const currentParams = new URLSearchParams(window.location.search);
+  const checkoutParams = new URLSearchParams();
+
+  for (const key of UTM_PARAMS) {
+    const value = currentParams.get(key);
+    if (value) {
+      checkoutParams.set(key, value);
+    }
+  }
+
+  const qs = checkoutParams.toString();
+  return qs ? `${base}?${qs}` : base;
+}
 
 type PlanId = "start" | "progress" | "elite";
 
@@ -158,7 +180,7 @@ export function SolutionScreen() {
     e.preventDefault();
     analytics.trackCheckout();
     analytics.trackCTAClick(`solution_screen_checkout_${plan}`);
-    window.location.href = CHECKOUT_URLS[plan];
+    window.location.href = buildCheckoutUrl(plan);
   };
 
   return (
@@ -298,7 +320,7 @@ export function SolutionScreen() {
 
                   {/* CTA */}
                   <a
-                    href={CHECKOUT_URLS[plan.id]}
+                    href={buildCheckoutUrl(plan.id)}
                     onClick={(e) => handleCheckout(e, plan.id)}
                     className={cn(
                       "inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-200 w-full",
