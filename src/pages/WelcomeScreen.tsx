@@ -4,6 +4,7 @@ import { CTAButton } from "@/components/ui/CTAButton";
 import { analytics } from "@/lib/analytics";
 import { useEffect } from "react";
 import { Clock, ShieldCheck, Check } from "lucide-react";
+import { captureUtmParams } from "@/pages/SolutionScreen";
 
 /**
  * TELA 1 - ENTRADA / HOOK
@@ -15,6 +16,7 @@ export function WelcomeScreen() {
   const [, setLocation] = useLocation();
 
   useEffect(() => {
+    captureUtmParams();
     analytics.trackPageView("welcome");
   }, []);
 

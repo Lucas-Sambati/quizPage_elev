@@ -32,15 +32,45 @@ const UTM_PARAMS = [
   "fbclid",
 ] as const;
 
+const STORAGE_KEY = "elev_utm_params";
+
+/**
+ * Captura UTMs da URL atual e salva em sessionStorage.
+ * Deve ser chamado uma vez na chegada do visitante (WelcomeScreen).
+ */
+export function captureUtmParams(): void {
+  const params = new URLSearchParams(window.location.search);
+  const utm: Record<string, string> = {};
+
+  for (const key of UTM_PARAMS) {
+    const value = params.get(key);
+    if (value) {
+      utm[key] = value;
+    }
+  }
+
+  if (Object.keys(utm).length > 0) {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(utm));
+  }
+}
+
+function getStoredUtmParams(): Record<string, string> {
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
 function buildCheckoutUrl(plan: PlanId): string {
   const base = CHECKOUT_BASE_URLS[plan];
-  const currentParams = new URLSearchParams(window.location.search);
+  const utm = getStoredUtmParams();
   const checkoutParams = new URLSearchParams();
 
   for (const key of UTM_PARAMS) {
-    const value = currentParams.get(key);
-    if (value) {
-      checkoutParams.set(key, value);
+    if (utm[key]) {
+      checkoutParams.set(key, utm[key]);
     }
   }
 
