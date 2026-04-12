@@ -20,6 +20,8 @@ function easeProgress(real: number): number {
 interface ProfileContent {
   profileTitle: string;
   profileName: string;
+  teaser: string;
+  teaserDetail: string;
 }
 
 /**
@@ -35,56 +37,97 @@ const PROFILE_CONTENT: Record<ProfileType, ProfileContent> = {
     ...BASE_CONTENT,
     profileTitle: "PERFIL OCUPADO",
     profileName: "OCUPADO",
+    teaser:
+      "Sua rotina não é o problema — o que você faz com o pouco tempo que tem, é.",
+    teaserDetail:
+      "O vídeo abaixo mostra o erro invisível que pessoas com pouco tempo cometem e como corrigir isso muda tudo.",
   },
   DESALINHADO: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL DESALINHADO",
     profileName: "DESALINHADO",
+    teaser:
+      "Você se esforça, mas treino, dieta e rotina estão apontando pra direções diferentes.",
+    teaserDetail:
+      "Esse desalinhamento é mais comum do que parece — e tem uma causa específica. Dê play.",
   },
   OBSTINADO: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL OBSTINADO",
     profileName: "OBSTINADO",
+    teaser: "Você tem garra, mas a motivação sozinha não sustenta resultado.",
+    teaserDetail:
+      "Existe um fator que transforma disciplina bruta em evolução real. O vídeo mostra qual.",
   },
   PROGRESSIVO: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL PROGRESSIVO",
     profileName: "PROGRESSIVO",
+    teaser:
+      "Você precisa ver resultado pra continuar — e isso não é fraqueza, é perfil.",
+    teaserDetail:
+      "O problema é que você está medindo progresso do jeito errado. Assista e entenda.",
   },
   REATIVO: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL REATIVO",
     profileName: "REATIVO",
+    teaser:
+      "Você depende de algo externo pra treinar — e isso explica cada vez que parou.",
+    teaserDetail:
+      "Existe uma correção simples que quebra esse ciclo. O vídeo mostra como.",
   },
   SEM_DIRECAO: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL SEM DIREÇÃO",
     profileName: "SEM DIREÇÃO",
+    teaser:
+      "Não é falta de vontade. É não saber exatamente o que fazer — e isso trava tudo.",
+    teaserDetail:
+      "Quando a direção fica clara, o esforço que você já faz começa a dar resultado. Dê play.",
   },
   BLOQUEADO: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL BLOQUEADO",
     profileName: "BLOQUEADO",
+    teaser:
+      "Você treina consistente, mas seu corpo parou de responder. Existe um motivo.",
+    teaserDetail:
+      "A estagnação não é aleatória — ela segue um padrão. O vídeo revela o seu.",
   },
   ENERGICO: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL ENÉRGICO",
     profileName: "ENÉRGICO",
+    teaser: "Você tem energia, mas pode estar gastando ela no treino errado.",
+    teaserDetail:
+      "Um ajuste na estrutura do treino pode destravar resultados que a intensidade sozinha não traz.",
   },
   EXIGENTE: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL EXIGENTE",
     profileName: "EXIGENTE",
+    teaser:
+      "Você quer o máximo — mas sem o acompanhamento certo, exigência vira frustração.",
+    teaserDetail:
+      "O vídeo mostra o que diferencia quem é exigente e evolui de quem é exigente e estagna.",
   },
   MALEAVAL: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL MALEÁVEL",
     profileName: "MALEÁVEL",
+    teaser:
+      "Você se adapta fácil — mas flexibilidade sem direção te mantém no mesmo lugar.",
+    teaserDetail: "O que falta não é mais mudança, é a mudança certa. Assista.",
   },
   LONGEVIDADE: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL LONGEVIDADE",
     profileName: "LONGEVIDADE",
+    teaser:
+      "Treinar pra saúde é inteligente — mas a maioria faz isso do jeito errado.",
+    teaserDetail:
+      "Existe uma abordagem que protege suas articulações, melhora exames e ainda transforma o físico.",
   },
 };
 
@@ -215,6 +258,16 @@ export function ResultScreen() {
               </h2>
               <span className="h-px flex-1 max-w-[60px] bg-gradient-to-l from-transparent to-primary/40" />
             </div>
+          </div>
+
+          {/* Teaser do perfil — gera curiosidade para dar play */}
+          <div className="animate-fade-in-up space-y-2 max-w-md mx-auto">
+            <p className="text-base md:text-lg text-foreground/90 font-semibold leading-snug">
+              {content.teaser}
+            </p>
+            <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+              {content.teaserDetail}
+            </p>
           </div>
 
           {/* VSL do perfil (9:16) — Player customizado */}

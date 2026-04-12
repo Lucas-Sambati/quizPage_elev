@@ -1,0 +1,360 @@
+PROPOSTA DE CRIATIVOS — APP ELEV
+================================
+
+
+DIAGNOSTICO DO FUNIL ATUAL
+
+Onde estamos perdendo:
+1. Criativo para Quiz: Alguns usuarios nem iniciam o quiz — o ad nao alinha expectativa com o que encontram
+2. Quiz para VSL: Usuarios completam o quiz, veem o perfil e nao dao play — falta curiosidade/urgencia antes do video
+3. Before/after com phonk falhou porque vendia o resultado final (corpo), nao o diagnostico. Nao havia ponte entre o ad e o quiz
+
+Por que o narrado funcionou 1x: tinha historia pessoal (confianca), apontava para o quiz como caminho. Mas explicava demais o app antes da hora.
+
+Principio-chave: O criativo deve vender o QUIZ (a experiencia de diagnostico), nao o app. O app e vendido na VSL.
+
+
+================================
+CRIATIVO 1 — "O Perfil Errado"
+Formato: Video Narrado / UGC — 15 a 30 segundos
+================================
+
+Conceito: Abordagem de curiosidade + diagnostico. Posiciona o quiz como uma ferramenta de autoconhecimento.
+
+Formato: Video vertical (9:16), voce falando direto para camera, sem musica de fundo alta (pode ter algo ambiente baixo).
+
+Roteiro exato:
+
+[Plano no rosto, olhando direto pra camera]
+
+"Eu treinei 2 anos no perfil errado sem saber."
+
+[Pausa de 1 segundo — deixa a frase pesar]
+
+"Nao era falta de esforco. Era o meu treino, a minha dieta, minha rotina inteira... tudo estava desalinhado com o que eu realmente precisava."
+
+[Corta pra tela do celular mostrando a quiz page rapidamente — 2 segundos]
+
+"Existe um diagnostico gratuito que analisa o seu perfil em 60 segundos. Ele me mostrou exatamente onde eu tava errando."
+
+[Volta pro rosto]
+
+"Link na bio. Descobre o teu e para de perder tempo."
+
+Por que funciona:
+- "Perfil errado" cria uma lacuna de conhecimento — "sera que EU to no perfil errado?"
+- Nao vende o app, vende o quiz
+- A CTA direciona pra descoberta, nao pra compra
+- Curto, direto, com autoridade pessoal
+
+Como fazer: Grava no celular, iluminacao boa (luz natural ou ring light), sem cenario elaborado. Edicao minima.
+
+
+================================
+CRIATIVO 2 — "93% das Pessoas"
+Formato: Imagem Estatica — Feed/Stories
+================================
+
+Conceito: Dado provocativo + curiosidade. Estatico com visual clean e escuro (identidade ELEV).
+
+Layout exato:
+
+Fundo preto com gradiente sutil para roxo (#3c0c8f) em 15% de opacidade.
+
+Texto principal (centralizado, bold, branco):
+93% das pessoas na academia
+estao treinando no
+PERFIL ERRADO.
+
+Linha divisoria roxa fina horizontal.
+
+Texto secundario (abaixo da linha, menor):
+Descubra o seu em 60 segundos.
+Diagnostico gratuito.
+
+Logo ELEV pequeno no canto inferior.
+
+Specs:
+- Fundo: #000000 com gradiente sutil para #3c0c8f (15% opacidade)
+- "PERFIL ERRADO" em bold, cor #FFFFFF
+- "93%" destaque em #3c0c8f ou violeta claro
+- Tipografia: sans-serif bold, limpa
+- Formato: 1080x1080 (feed) e 1080x1920 (stories)
+
+Copy do ad (texto acima da imagem no feed):
+Voce pode estar treinando certo... no perfil errado.
+60 segundos. Sem cadastro. Sem enrolacao.
+Descubra agora.
+
+Por que funciona:
+- Numero especifico (93%) gera credibilidade e curiosidade
+- "Perfil errado" implica que existe um certo — e o quiz revela qual e
+- Zero mencao ao app — toda atencao no quiz
+- Visual alinhado com a brand ELEV
+
+
+================================
+CRIATIVO 3 — "Qual e o Seu?"
+Formato: Carrossel — 3 slides
+================================
+
+Conceito: Mostra 3 perfis reais do quiz como "cartas", gerando curiosidade tipo teste de personalidade.
+
+Slide 1:
+Fundo escuro.
+Texto centralizado:
+"Existem 11 perfis de treino."
+"So 1 e o seu."
+"Deslize para ver"
+
+Slide 2:
+Tres cards lado a lado com icones de cadeado nos dois das pontas e um icone de raio no central.
+Cards: OCUPADO (trancado) | BLOQUEADO (destaque) | OBSTINADO (trancado)
+
+Abaixo dos cards:
+"Treina, mas nao evolui"
+"O perfil BLOQUEADO treina forte, mas esta preso num ciclo que nao da resultado."
+"E o seu?"
+
+Slide 3:
+Texto centralizado:
+"Descubra seu perfil real em 60 segundos."
+
+Botao visual: FAZER O DIAGNOSTICO
+
+Abaixo:
+Gratuito
+Sem cadastro
+Resultado imediato
+
+Copy do ad:
+Voce sabe qual e o seu perfil de treino? A maioria nao sabe — e e exatamente por isso que nao evolui.
+
+Por que funciona:
+- Carrossel tem engagement alto no Instagram/Facebook
+- Mostra um perfil real gerando identificacao
+- Os perfis "trancados" geram curiosidade
+- Formato de "teste de personalidade" e irresistivel
+
+
+================================
+CRIATIVO 4 — "Eu Treinava Errado"
+Formato: Video IA / Avatar Realista — 20 a 30 segundos
+================================
+
+Conceito: Video com IA de um avatar masculino falando direto pra camera num tom confessional. Usa ferramentas como HeyGen, Synthesia, ou similar.
+
+Roteiro:
+
+[Close no rosto, expressao seria]
+
+"Eu tava treinando 5 vezes por semana. Dieta certinha. Tudo no lugar."
+
+[Pausa]
+
+"E nao mudava nada."
+
+[Expressao muda pra leve surpresa]
+
+"Ate que eu fiz um diagnostico gratis de 60 segundos que me mostrou meu perfil de treino. E ai eu entendi: meu treino era bom... mas era pro perfil errado."
+
+[Tom mais direto]
+
+"Se voce treina e nao evolui, faz esse teste. Ta no link."
+
+Variacao: Pode fazer o mesmo roteiro com avatar feminino para testar segmentacao feminina.
+
+Por que funciona:
+- UGC-style e o formato de maior performance em Meta Ads atualmente
+- Tom confessional gera identificacao
+- Nao vende nada — convida pro diagnostico
+- Com IA, pode testar multiplas variacoes (genero, etnia, idade) rapidamente
+
+
+================================
+CRIATIVO 5 — "A Pergunta"
+Formato: Video 10 a 15 segundos — Stories/Reels
+================================
+
+Conceito: Ultra-curto. Uma unica pergunta provocativa com texto na tela.
+
+Estrutura visual:
+
+Fundo dark com particulas ou gradiente roxo.
+
+Texto animado (surgindo palavra por palavra):
+
+"Se voce treina ha mais de 3 meses
+e nao ve resultado..."
+
+Pausa 1.5 segundos.
+
+"O problema nao e o treino."
+
+Pausa 1 segundo.
+
+"E o perfil."
+
+Transicao rapida.
+
+"Descubra o seu — link na bio"
+Logo ELEV.
+
+Sem narracao. Apenas texto animado + trilha ambiente tensa/cinematic (tipo Hans Zimmer light, nao phonk).
+
+Por que funciona:
+- Super rapido — pega atencao em stories
+- "O problema nao e o treino" quebra a crenca do publico-alvo
+- Gera lacuna de conhecimento: "Se nao e o treino, o que e?"
+- Facil de produzir (CapCut, After Effects, ou IA como Runway)
+
+
+================================
+CRIATIVO 6 — "Antes e Depois com Contexto"
+Formato: Video Narrado — 20 a 25 segundos
+================================
+
+Conceito: Refaz o criativo que funcionou, mas com uma mudanca crucial: nao apresenta o app, so o quiz.
+
+Roteiro:
+
+[Tela do PC com foto antes/depois — seu fisico]
+
+"Essa era minha evolucao de 2 anos. Dois anos treinando pesado."
+
+[Aponta pro 'antes']
+
+"Esse aqui era eu no perfil errado."
+
+[Aponta pro 'depois']
+
+"Esse aqui sou eu depois que descobri o meu perfil real de treino."
+
+[Corta pro rosto]
+
+"Eu criei um diagnostico gratuito de 60 segundos que te mostra qual e o seu. Ta no link."
+
+Diferenca do original: Nao menciona o app ELEV. Nao apresenta features. Toda a narrativa e sobre o conceito de perfil de treino e o quiz como ferramenta diagnostica.
+
+
+================================
+CRIATIVO 7 — "O Checklist"
+Formato: Imagem Estatica — Stories/Feed
+================================
+
+Conceito: Lista de "sintomas" que gera identificacao instantanea.
+
+Layout:
+
+Fundo preto.
+
+Titulo:
+"Voce se identifica?"
+
+Lista com checkboxes marcados:
+[x] Treina mas nao evolui
+[x] Ja tentou varias dietas
+[x] Se sente perdido na academia
+[x] Falta motivacao pra ir
+[x] Nao sabe se ta fazendo certo
+
+Linha roxa divisoria.
+
+Texto inferior:
+"Voce pode estar no perfil
+errado de treino."
+
+"Descubra em 60s — Gratis"
+
+Copy do ad:
+Se marcou 2 ou mais, voce precisa fazer esse diagnostico. 60 segundos. Gratis. Sem cadastro.
+
+
+================================
+CRIATIVO 8 — "O Erro Silencioso"
+Formato: Video UGC — 15 a 20 segundos — Framework 16 Words
+================================
+
+Conceito: Usa elementos do 16 Words Sales Letter adaptados ao criativo (nao todos — o criativo e so o primeiro toque).
+
+Elementos do framework usados:
+- "Como isso e diferente?" -> "Nao e mais um app de treino. E um diagnostico."
+- "Quem e o culpado?" -> "Voce treina certo. Mas no perfil errado."
+- "O que me impede?" -> "60 segundos. Sem cadastro. Sem pagar nada."
+- "Como comeco?" -> "Link na bio. Faz o teste agora."
+
+Roteiro falado (natural, nao robotico):
+
+[Camera perto, tom de "preciso te contar algo"]
+
+"A maioria dos caras que treina pesado e nao evolui... nao ta fazendo exercicio errado. Ta treinando no perfil errado de treino."
+
+"Eu fiz um teste de 60 segundos que me mostrou exatamente isso."
+
+"E gratis, nao precisa de cadastro. Faz o teu e ve o que descobre. Link aqui embaixo."
+
+
+================================
+ESTRATEGIA DE TESTE — PRIORIZACAO
+================================
+
+Ordem recomendada de teste:
+
+Prioridade 1: Criativo 6 — "Antes/Depois com Contexto" (Video narrado)
+Motivo: Refaz o que ja vendeu, mas sem apresentar o app
+
+Prioridade 2: Criativo 1 — "O Perfil Errado" (Video UGC)
+Motivo: Maior potencial de escala — curiosidade pura
+
+Prioridade 3: Criativo 2 — "93% das Pessoas" (Imagem estatica)
+Motivo: Barato de testar, filtra bem
+
+Prioridade 4: Criativo 5 — "A Pergunta" (Video texto)
+Motivo: Ultra-rapido de produzir, bom pra stories
+
+Prioridade 5: Criativo 7 — "O Checklist" (Imagem estatica)
+Motivo: Alta identificacao
+
+Prioridade 6: Criativo 3 — "Qual e o Seu?" (Carrossel)
+Motivo: Engagement organico + paid
+
+Prioridade 7: Criativo 4 — "Eu Treinava Errado" (Video IA)
+Motivo: Para testar variacoes de avatar
+
+Prioridade 8: Criativo 8 — "O Erro Silencioso" (Video UGC com 16 Words)
+Motivo: Framework completo dentro do ad
+
+
+================================
+REGRA DE OURO
+================================
+
+Em todos os criativos: o criativo vende o QUIZ/DIAGNOSTICO, nunca o app. A palavra-chave recorrente e "perfil de treino". Esse conceito amarra o criativo ao quiz e o quiz a VSL.
+
+
+================================
+MUDANCA IMPLEMENTADA NA QUIZ PAGE
+================================
+
+Adicionei teasers personalizados por perfil na tela de resultado (ResultScreen). Duas frases aparecem entre o nome do perfil e o video:
+
+1. Teaser principal: frase de impacto que valida a situacao da pessoa
+2. Teaser detalhe: convite direto pra dar play no video
+
+Exemplos por perfil:
+
+OCUPADO:
+Teaser: "Sua rotina nao e o problema — o que voce faz com o pouco tempo que tem, e."
+Detalhe: "O video abaixo mostra o erro invisivel que pessoas com pouco tempo cometem e como corrigir isso muda tudo."
+
+BLOQUEADO:
+Teaser: "Voce treina consistente, mas seu corpo parou de responder. Existe um motivo."
+Detalhe: "A estagnacao nao e aleatoria — ela segue um padrao. O video revela o seu."
+
+SEM DIRECAO:
+Teaser: "Nao e falta de vontade. E nao saber exatamente o que fazer — e isso trava tudo."
+Detalhe: "Quando a direcao fica clara, o esforco que voce ja faz comeca a dar resultado. De play."
+
+(Todos os 11 perfis tem teasers personalizados.)
+
+Objetivo: criar a ponte emocional que faltava entre ver o nome do perfil e querer assistir a VSL.
