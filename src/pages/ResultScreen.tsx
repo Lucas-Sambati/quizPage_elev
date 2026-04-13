@@ -38,96 +38,99 @@ const PROFILE_CONTENT: Record<ProfileType, ProfileContent> = {
     profileTitle: "PERFIL OCUPADO",
     profileName: "OCUPADO",
     teaser:
-      "Sua rotina não é o problema — o que você faz com o pouco tempo que tem, é.",
+      "A falta de tempo não é desculpa — é o verdadeiro motivo pelo qual você não evolui. E poucos entendem por quê.",
     teaserDetail:
-      "O vídeo abaixo mostra o erro invisível que pessoas com pouco tempo cometem e como corrigir isso muda tudo.",
+      "O vídeo mostra como o tempo limitado sabota seu resultado de um jeito que você nem percebe.",
   },
   DESALINHADO: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL DESALINHADO",
     profileName: "DESALINHADO",
     teaser:
-      "Você se esforça, mas treino, dieta e rotina estão apontando pra direções diferentes.",
+      "Tempo até você tem. O problema é que a intensidade do que você faz não está alinhada com o que seu corpo precisa.",
     teaserDetail:
-      "Esse desalinhamento é mais comum do que parece — e tem uma causa específica. Dê play.",
+      "Esse desalinhamento invisível é o que trava sua evolução. O vídeo mostra exatamente onde está o erro.",
   },
   OBSTINADO: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL OBSTINADO",
     profileName: "OBSTINADO",
-    teaser: "Você tem garra, mas a motivação sozinha não sustenta resultado.",
+    teaser:
+      "Você é movido por desafio e competição — e sem isso, seu treino perde a força que deveria ter.",
     teaserDetail:
-      "Existe um fator que transforma disciplina bruta em evolução real. O vídeo mostra qual.",
+      "A falta de um ambiente que te desafie é o que está te segurando. O vídeo mostra como resolver.",
   },
   PROGRESSIVO: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL PROGRESSIVO",
     profileName: "PROGRESSIVO",
     teaser:
-      "Você precisa ver resultado pra continuar — e isso não é fraqueza, é perfil.",
+      "Evolução é o seu combustível — mas quando você para de ver resultado, tudo desmorona.",
     teaserDetail:
-      "O problema é que você está medindo progresso do jeito errado. Assista e entenda.",
+      "A falta de um progresso visível, mesmo pequeno, é o que trava você. O vídeo revela como mudar isso.",
   },
   REATIVO: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL REATIVO",
     profileName: "REATIVO",
     teaser:
-      "Você depende de algo externo pra treinar — e isso explica cada vez que parou.",
+      "Você precisa de incentivo, acompanhamento e certeza pra seguir em frente — e sem isso, você para.",
     teaserDetail:
-      "Existe uma correção simples que quebra esse ciclo. O vídeo mostra como.",
+      "A falta de um acompanhamento individual é o que impede sua evolução. O vídeo mostra o caminho.",
   },
   SEM_DIRECAO: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL SEM DIREÇÃO",
     profileName: "SEM DIREÇÃO",
     teaser:
-      "Não é falta de vontade. É não saber exatamente o que fazer — e isso trava tudo.",
+      "Excesso de informação e falta de clareza — você não sabe por onde seguir, e isso trava tudo.",
     teaserDetail:
-      "Quando a direção fica clara, o esforço que você já faz começa a dar resultado. Dê play.",
+      "A falta de um direcionamento concreto é a verdadeira culpada. O vídeo mostra como sair desse ciclo.",
   },
   BLOQUEADO: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL BLOQUEADO",
     profileName: "BLOQUEADO",
     teaser:
-      "Você treina consistente, mas seu corpo parou de responder. Existe um motivo.",
+      "Você treina, mas parou de ver resultado — e sem evolução visível, a motivação desaparece.",
     teaserDetail:
-      "A estagnação não é aleatória — ela segue um padrão. O vídeo revela o seu.",
+      "A falta de um progresso perceptível é o que te mantém estagnado. O vídeo revela o padrão por trás disso.",
   },
   ENERGICO: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL ENÉRGICO",
     profileName: "ENÉRGICO",
-    teaser: "Você tem energia, mas pode estar gastando ela no treino errado.",
+    teaser:
+      "Toda ida à academia parece a mesma coisa — e essa monotonia está matando seus resultados.",
     teaserDetail:
-      "Um ajuste na estrutura do treino pode destravar resultados que a intensidade sozinha não traz.",
+      "O treino repetitivo é o verdadeiro culpado. O vídeo mostra como quebrar esse ciclo.",
   },
   EXIGENTE: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL EXIGENTE",
     profileName: "EXIGENTE",
     teaser:
-      "Você quer o máximo — mas sem o acompanhamento certo, exigência vira frustração.",
+      "Você quer o melhor, mas sem acompanhamento e certeza, a exigência vira frustração.",
     teaserDetail:
-      "O vídeo mostra o que diferencia quem é exigente e evolui de quem é exigente e estagna.",
+      "A falta de um acompanhamento individual é o que separa resultado de estagnação. Dê play.",
   },
   MALEAVAL: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL MALEÁVEL",
     profileName: "MALEÁVEL",
     teaser:
-      "Você se adapta fácil — mas flexibilidade sem direção te mantém no mesmo lugar.",
-    teaserDetail: "O que falta não é mais mudança, é a mudança certa. Assista.",
+      "Você perdeu o ânimo de treinar — cada ida à academia parece igual à anterior.",
+    teaserDetail:
+      "Esse treino monótono é o verdadeiro culpado por você não evoluir. O vídeo mostra a saída.",
   },
   LONGEVIDADE: {
     ...BASE_CONTENT,
     profileTitle: "PERFIL LONGEVIDADE",
     profileName: "LONGEVIDADE",
     teaser:
-      "Treinar pra saúde é inteligente — mas a maioria faz isso do jeito errado.",
+      "Você busca saúde e qualidade de vida — mas sem o direcionamento certo, o esforço não se converte em resultado.",
     teaserDetail:
-      "Existe uma abordagem que protege suas articulações, melhora exames e ainda transforma o físico.",
+      "A falta de um caminho claro pro seu objetivo específico é o que te impede de evoluir. O vídeo mostra como corrigir.",
   },
 };
 
