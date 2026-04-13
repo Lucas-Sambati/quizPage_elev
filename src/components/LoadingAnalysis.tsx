@@ -8,7 +8,7 @@ interface LoadingAnalysisProps {
 }
 
 /** Tempo mínimo de exibição (ms) para manter a sensação de análise real */
-const MIN_DISPLAY_MS = 2000;
+const MIN_DISPLAY_MS = 4000;
 /** Tempo máximo de espera pelo vídeo (ms) — fallback para redes lentas */
 const MAX_WAIT_MS = 12000;
 
